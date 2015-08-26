@@ -4,10 +4,10 @@ var Liftoff = require('liftoff');
 var argv = require('minimist')(process.argv.slice(2));
 var path = require('path');
 var cli = new Liftoff({
-    name: 'fiskit',
+    name: 'fk',
     processTitle: 'fiskit',
     moduleName: 'fiskit',
-    configName: 'fis-conf',
+    configName: '{fk,fis}-conf',
     extensions: {
         '.js': null
     }
