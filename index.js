@@ -25,12 +25,12 @@ function init(cfg) {
     fiskit.util.merge(config, cfg)
 
     // 开启模块化插件
-    config.MODULES && fiskit.hook(config.MODULES.mode, config.MODULES);
+    config.modules && fiskit.hook(config.modules.mode, config.modules);
     
     // 静态资源加载插件
     fiskit.match('::packager', {
         postpackager: fiskit.plugin('loader', {
-            resourceType: config.MODULES ? config.MODULES.mode : 'auto',
+            resourceType: config.modules ? config.modules.mode : 'auto',
             useInlineMap: true
         })
     });
@@ -40,19 +40,18 @@ function init(cfg) {
         .match('{/static/**/_*.scss,/{page,widget}/**/*.json,/widget/**/*.vm}', {
             release: false
         })
-        // 关闭useHash
         .match('*', {
-            useHash: false
+            // 关闭useHash
+            useHash: false,
+            // 开发环境，cdn可配置开关
+            domain: config.cdn ? (config.cdnUrl + '/' + config.version) : ''
         })
         .match('*.{css,scss,js,png,jpg,gif}', {
-            useHash: config.USEHASH,
-            domain: config.CDN ? (config.CDNURL + '/' + config.VERSION) : ''
+            useHash: config.useHash
         })
         // 添加velocity模板引擎
         .match('/page/(**.vm)', {
-            parser: fiskit.plugin('velocity', {
-                loader: config.MODULES && config.MODULES.loader
-            }),
+            parser: fiskit.plugin('velocity', config.velocity),
             rExt: '.html',
             loaderLang: 'html',
             release: '$1'
@@ -71,8 +70,9 @@ function init(cfg) {
     fiskit
         .media('debug')
         .match('*', {
+            domain: config.cdnUrl + '/' + config.version,
             deploy: fiskit.plugin('local-deliver', {
-                to: 'output/debug/' + config.VERSION
+                to: 'output/debug/' + config.version
             })
         });
     
@@ -80,7 +80,7 @@ function init(cfg) {
     // 发布后直接上传CDN服务器
     fiskit
         .media('prod')
-        .match('/{page,test}/**', {
+        .match('/{page,mock}/**', {
             release: false
         })
         .match('*.js', {
@@ -95,10 +95,9 @@ function init(cfg) {
             optimizer: fiskit.plugin('png-compressor')
         })
         .match('*', {
-            // 发布环境始终开启CDN
-            domain: config.CDNURL + '/' + config.VERSION,
+            domain: config.cdnUrl + '/' + config.version,
             deploy: fiskit.plugin('local-deliver', {
-                to: 'output/prod/' + config.VERSION
+                to: 'output/prod/' + config.version
             })
         });
 }

@@ -1,2 +1,80 @@
 # fiskit
 A front-end toolkit based on fis (基于fis的前端脚手架工具)
+```
+npm install -g fiskit
+```
+<pre>
+fk release [dev|debug|prod]
+dev: 开发时使用
+debug: 用于调试时使用，线上环境的未压缩版代码，方便查找bug
+prod: 发布时使用，为debug的压缩版本
+</pre>
+
+## 文档
+
+快速入门、配置、插件开发以及原理等文档 [FIS官方文档](http://fis.baidu.com/fis3/docs/beginning/intro.html)
+
+
+## 目录结构
+<pre>
+root:
+  ├ _docs: 项目文档目录
+  ├ page: 页面文件
+  │  ├ home.html
+  │  ├ list.html
+  │  ├ detail.html
+  ├ sass: SASS库目录
+  ├ static: 静态资源目录
+  │  ├ lib: js库文件目录(jquery, zepto等)
+  │  ├ app: js目录
+  │  ├ css: css目录
+  │  ├ img: 图片目录
+  ├ mock: 测试模拟数据目录
+  └ widget: 组件目录
+     ├ header
+     │  ├ header.tpl
+     │  ├ header.js
+     │  ├ header.css
+     │  ├ header.json
+     └ nav
+        ├ nav.tpl
+        ├ nav.js
+        ├ nav.css
+        └ nav.json
+</pre>
+
+## 配置例子
+
+*fk-conf.js*
+
+```
+var config = {
+	// 静态资源版本号
+    version: '1.0.0',
+    // 合并开关
+    packed: false,
+    // cdn域名开关，prod环境始终为true
+    cdn: false,
+    // cdn域名地址
+    cdnUrl: 'http://cdn.xxx.com',
+    // MD5后缀开关
+    useHash: false,
+    // fis-parser-velocity 配置
+    // 具体参考：https://github.com/richard-chen-1985/fis-parser-velocity
+    velocity: {
+        loader: 'require',
+        macro: '/macro.vm'
+    },
+    // 模块化配置，如不使用模块化框架，则为false
+    modules: {
+        // 模块规范[amd|cmd]
+        mode: 'amd',
+        // 以下配置请参考fis3-hook-amd或者fis3-hook-cmd配置
+        forwardDeclaration: true,
+        baseUrl: '',
+        paths: {}
+    }
+};
+
+fis.config.get('initConfig')(config);
+```
