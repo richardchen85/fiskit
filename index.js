@@ -4,6 +4,7 @@ fiskit.require.prefixes.unshift('fiskit');
 fiskit.cli.name = 'fk';
 fiskit.configName = 'fk-conf';
 fiskit.cli.info = require('./package.json');
+
 // 重写LOGO
 require('./lib/logo')(fiskit);
 
@@ -22,7 +23,7 @@ function init(cfg) {
     // 读取默认配置文件
     var config = require('./lib/config');
     // 合并传入配置
-    fiskit.util.merge(config, cfg)
+    fiskit.util.merge(config, cfg);
 
     // 开启模块化插件
     config.modules && fiskit.hook(config.modules.mode, config.modules);
@@ -32,7 +33,8 @@ function init(cfg) {
         postpackager: fiskit.plugin('loader', {
             resourceType: config.modules ? config.modules.mode : 'auto',
             useInlineMap: true
-        })
+        }),
+        spriter: fis.plugin('csssprites')
     });
     
     // 默认设置
