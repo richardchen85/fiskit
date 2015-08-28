@@ -20,17 +20,24 @@ prod: 发布时使用，为debug的压缩版本
 root:
   ├ _docs: 项目文档目录
   ├ page: 页面文件
-  │  ├ home.html
-  │  ├ list.html
-  │  ├ detail.html
+  │  ├ home
+  │  │  ├ home.vm
+  │  │  ├ home.scss
+  │  │  └ home.js
+  │  ├ list
+  │  │  ├ list.vm
+  │  │  ├ list.scss
+  │  │  └ list.js
+  │  └ detail
+  │     ├ detail.vm
+  │     ├ detail.scss
+  │     └ detail.js
   ├ sass: SASS库目录
-  ├ static: 静态资源目录
-  │  ├ lib: js库文件目录(jquery, zepto等)
-  │  ├ app: js目录
-  │  ├ css: css目录
-  │  ├ img: 图片目录
   ├ mock: 测试模拟数据目录
-  └ widget: 组件目录
+  ├ static: 静态资源目录
+  │  │  ├ lib: 公共库文件，如jquery, zepto, requirejs等
+  |  |  ├ components: 公共组件目录，如bootstrap, jqueryui等
+  └ widget: 页面组件目录
      ├ header
      │  ├ header.tpl
      │  ├ header.js
@@ -51,8 +58,6 @@ root:
 var config = {
 	// 静态资源版本号
     version: '1.0.0',
-    // 合并开关
-    packed: false,
     // cdn域名开关，prod环境始终为true
     cdn: false,
     // cdn域名地址

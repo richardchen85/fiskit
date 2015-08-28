@@ -39,31 +39,34 @@ function init(cfg) {
     
     // 默认设置
     fiskit
-        .match('{/static/**/_*.scss,/{page,widget}/**/*.json,/widget/**/*.vm}', {
-            release: false
-        })
         .match('*', {
             // 关闭useHash
             useHash: false,
             // 开发环境，cdn可配置开关
             domain: config.cdn ? (config.cdnUrl + '/' + config.version) : ''
         })
+        // 忽略数据文件及widget的vm文件
+        .match('{/{page,widget}/**/*.json,/widget/**/*.vm,/page/macro.vm}', {
+            release: false
+        })
         .match('*.{css,scss,js,png,jpg,gif}', {
             useHash: config.useHash
         })
-        // 添加velocity模板引擎
-        .match('/page/(**.vm)', {
-            parser: fiskit.plugin('velocity', config.velocity),
-            rExt: '.html',
-            loaderLang: 'html',
+        .match('/page/(**/*)', {
             release: '$1'
         })
+        // 添加velocity模板引擎
+        .match('/page/**.vm', {
+            parser: fiskit.plugin('velocity', config.velocity),
+            rExt: '.html',
+            loaderLang: 'html'
+        })
         // sass
-        .match('/{widget,static}/**.scss', {
+        .match('*.scss', {
             parser: fiskit.plugin('sass'),
             rExt: '.css'
         })
-        .match('/{widget/**/*,/static/app/common/**.js}', {
+        .match('/{widget/**.js}', {
             isMod: true
         });
     
@@ -82,7 +85,7 @@ function init(cfg) {
     // 发布后直接上传CDN服务器
     fiskit
         .media('prod')
-        .match('/{page,mock}/**', {
+        .match('/{page/**.vm,mock/**}', {
             release: false
         })
         .match('*.js', {
