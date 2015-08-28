@@ -17,36 +17,33 @@ prod: 发布时使用，为debug的压缩版本
 
 ## 目录结构
 <pre>
-root:
-  ├ _docs: 项目文档目录
-  ├ page: 页面文件
+root
+  ├ _docs 项目文档目录
+  ├ page 页面文件
   │  ├ home
-  │  │  ├ home.vm
-  │  │  ├ home.scss
-  │  │  └ home.js
+  │  │  └ home.vm
   │  ├ list
-  │  │  ├ list.vm
-  │  │  ├ list.scss
-  │  │  └ list.js
+  │  │  └ list.vm
   │  └ detail
-  │     ├ detail.vm
-  │     ├ detail.scss
-  │     └ detail.js
-  ├ sass: SASS库目录
-  ├ mock: 测试模拟数据目录
-  ├ static: 静态资源目录
-  │  │  ├ lib: 公共库文件，如jquery, zepto, requirejs等
-  |  |  ├ components: 公共组件目录，如bootstrap, jqueryui等
-  └ widget: 页面组件目录
+  │     └ detail.vm
+  ├ sass SASS库目录
+  ├ mock 测试模拟数据目录
+  ├ static 静态资源目录
+  │  ├ img 图片目录
+  │  ├ css css目录
+  │  └ js 非模块化js目录
+  │     ├ lib 模块化框架，如requirejs, modjs, seajs等
+  │     └ common 公共库文件，如bootstrap, jqueryui等
+  └ widget 组件目录
      ├ header
-     │  ├ header.tpl
+     │  ├ header.vm
      │  ├ header.js
-     │  ├ header.css
+     │  ├ header.scss
      │  ├ header.json
      └ nav
-        ├ nav.tpl
+        ├ nav.vm
         ├ nav.js
-        ├ nav.css
+        ├ nav.scss
         └ nav.json
 </pre>
 
