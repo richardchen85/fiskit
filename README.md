@@ -1,5 +1,5 @@
 # fiskit
-A front-end toolkit based on fis (基于fis的前端脚手架工具)
+A front-end toolkit based on fis （基于fis的纯前端脚手架工具）
 ```
 npm install -g fiskit
 ```
@@ -78,5 +78,6 @@ var config = {
     }
 };
 
-fis.config.get('initConfig')(config);
+fis.amount(config);
 ```
+这里有完整的[fiskit-demo](https://github.com/richard-chen-1985/fiskit-demo)供参考。
