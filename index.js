@@ -1,41 +1,48 @@
 // 扩展fis的一些基础事情
-var fis = module.exports = require('fis3');
-fis.require.prefixes.unshift('fk');
-fis.cli.name = 'fk';
-fis.configName = 'fk-conf';
-fis.cli.info = require('./package.json');
+var fiskit = module.exports = require('fis3');
+fiskit.require.prefixes.unshift('fk');
+fiskit.configName = 'fk-conf';
+fiskit.cli.name = 'fk';
+//fiskit.cli.help.commands = [ 'release', 'install', 'server', 'init' ];
+fiskit.cli.info = require('./package.json');
+fiskit.cli.version = require('./lib/logo');
 
-// 重写LOGO
-require('./lib/logo')(fis);
+// alias
+Object.defineProperty(global, 'fiskit', {
+    enumerable: true,
+    writable: false,
+    value: fiskit
+});
+
 
 // 添加全局忽略
-fis.set('project.ignore', fis.get('project.ignore').concat([
+fiskit.set('project.ignore', fiskit.get('project.ignore').concat([
     'README.md',
     'fk-conf.js',
     '/{_docs,sass}/**'
 ]));
 
 // init方法，初始化fis配置
-fis.amount = function(cfg) {
+fiskit.amount = function(cfg) {
     // 读取默认配置文件
     var config = require('./lib/config');
     // 合并传入配置
-    fis.util.merge(config, cfg);
+    fiskit.util.merge(config, cfg);
 
     // 开启模块化插件
-    config.modules && fis.hook(config.modules.mode, config.modules);
+    config.modules && fiskit.hook(config.modules.mode, config.modules);
     
     // 静态资源加载插件
-    fis.match('::packager', {
-        postpackager: fis.plugin('loader', {
+    fiskit.match('::packager', {
+        postpackager: fiskit.plugin('loader', {
             resourceType: config.modules ? config.modules.mode : 'auto',
             useInlineMap: true
         }),
-        spriter: fis.plugin('csssprites')
+        spriter: fiskit.plugin('csssprites')
     });
     
     // 默认设置
-    fis
+    fiskit
         .match('*', {
             // 关闭md5
             useHash: false,
@@ -56,7 +63,7 @@ fis.amount = function(cfg) {
         })
         // 添加velocity模板引擎
         .match('/page/(**.vm)', {
-            parser: fis.plugin('velocity', config.velocity),
+            parser: fiskit.plugin('velocity', config.velocity),
             rExt: '.html',
             loaderLang: 'html',
             release: '$1'
@@ -66,7 +73,7 @@ fis.amount = function(cfg) {
         })
         // sass
         .match('*.scss', {
-            parser: fis.plugin('sass'),
+            parser: fiskit.plugin('sass'),
             rExt: '.css'
         })
         // widget所有组件都模块化
@@ -76,14 +83,14 @@ fis.amount = function(cfg) {
     
     // debug和prod环境共同配置
     ['debug', 'prod'].forEach(function(_media) {
-        fis
+        fiskit
             .media(_media)
             .match('/{page/**.vm,mock/**}', {
                 release: false
             })
             .match('*', {
                 domain: config.cdnUrl + '/' + config.version,
-                deploy: fis.plugin('local-deliver', {
+                deploy: fiskit.plugin('local-deliver', {
                     to: 'output/' + _media + '/' + config.version
                 })
             })
@@ -91,17 +98,17 @@ fis.amount = function(cfg) {
 
     // 生产环境设置
     // 发布后直接上传CDN服务器
-    fis
+    fiskit
         .media('prod')
         .match('*.js', {
-            optimizer: fis.plugin('uglify-js', {
+            optimizer: fiskit.plugin('uglify-js', {
                 mangle: ['require', 'define']
             })
         })
         .match('*.{css,scss}', {
-            optimizer: fis.plugin('clean-css')
+            optimizer: fiskit.plugin('clean-css')
         })
         .match('*.png', {
-            optimizer: fis.plugin('png-compressor')
+            optimizer: fiskit.plugin('png-compressor')
         })
-}
+};
