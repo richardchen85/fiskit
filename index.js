@@ -19,6 +19,7 @@ Object.defineProperty(global, 'fiskit', {
 fiskit.set('project.ignore', fiskit.get('project.ignore').concat([
     'README.md',
     'fk-conf.js',
+    '*.iml',
     '/{_docs,sass}/**'
 ]));
 
