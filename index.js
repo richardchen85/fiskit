@@ -14,7 +14,6 @@ Object.defineProperty(global, 'fiskit', {
     value: fiskit
 });
 
-
 // 添加全局忽略
 fiskit.set('project.ignore', fiskit.get('project.ignore').concat([
     'README.md',
