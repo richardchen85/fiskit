@@ -41,7 +41,15 @@ fiskit.amount = function(cfg) {
         spriter: fiskit.plugin('csssprites')
     });
     
-    // 默认设置
+    mediaDev(config);
+
+    mediaVM(config);
+    
+    mediaDebugAndDeploy(config);
+};
+
+// 默认配置
+function mediaDev(config) {
     fiskit
         .match('*', {
             // 关闭md5
@@ -50,7 +58,7 @@ fiskit.amount = function(cfg) {
             domain: config.cdn ? (config.cdnUrl + '/' + config.version) : ''
         })
         // 忽略数据文件及widget的vm文件
-        .match('{/widget/**.{json,vm},/page/**.json,/page/macro.vm}', {
+        .match('{/widget/**.{mock,json,vm},/page/**.{json,mock},/page/macro.vm}', {
             release: false
         })
         // 静态资源加md5
@@ -80,8 +88,37 @@ fiskit.amount = function(cfg) {
         .match('/widget/**.{css,scss,js}', {
             isMod: true
         });
-    
-    // debug和prod环境共同配置
+
+    // 默认发布目录
+    config.devPath && fiskit.media('dev').match('*', {
+        deploy: fiskit.plugin('local-deliver', {
+            to: config.devPath
+        })
+    });
+}
+
+// 只发布模板文件的配置
+function mediaVM(config) {
+    var tmpVelocity = fiskit.util.merge({parse: false}, config.velocity);
+    fiskit
+        .media('vm')
+        .match('*.vm', {
+            parser: fiskit.plugin('velocity', tmpVelocity),
+            rExt: '.vm',
+            deploy: fiskit.plugin('local-deliver', {
+                to: './output/template/' + config.version
+            })
+        })
+        .match('/page/(**.vm)', {
+            release: '$1'
+        })
+        .match('/widget/**.vm', {
+            release: '$0'
+        });
+}
+
+// debug和prod环境共同配置
+function mediaDebugAndDeploy(config) {
     ['debug', 'prod'].forEach(function(_media) {
         fiskit
             .media(_media)
@@ -111,4 +148,4 @@ fiskit.amount = function(cfg) {
         .match('*.png', {
             optimizer: fiskit.plugin('png-compressor')
         })
-};
+}

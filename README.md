@@ -4,8 +4,9 @@ A front-end toolkit based on fis （基于fis的纯前端脚手架工具）
 npm install -g fiskit
 ```
 <pre>
-fk release [dev|debug|prod]
+fk release [dev|vm|debug|prod]
 dev: 开发时使用
+vm: 只输出vm模板文件
 debug: 用于调试时使用，线上环境的未压缩版代码，方便查找bug
 prod: 发布时使用，为debug的压缩版本
 </pre>
@@ -39,12 +40,12 @@ root
      │  ├ header.vm
      │  ├ header.js
      │  ├ header.scss
-     │  ├ header.json
+     │  ├ header.mock
      └ nav
         ├ nav.vm
         ├ nav.js
         ├ nav.scss
-        └ nav.json
+        └ nav.mock
 </pre>
 
 ## 配置例子
@@ -67,6 +68,9 @@ var config = {
         loader: 'require',
         macro: '/macro.vm'
     },
+    // fiskit release dev目标路径，默认不设置
+    // 如果你用非fis自带server，可以直接将代码输出到你server的根目录
+    devPath: '',
     // 模块化配置，如不使用模块化框架，则为false
     modules: {
         // 模块规范[amd|cmd]
