@@ -105,9 +105,9 @@ function mediaVM(config) {
         .match('*.vm', {
             parser: fiskit.plugin('velocity', tmpVelocity),
             rExt: '.vm',
-            deploy: fiskit.plugin('local-deliver', {
+            deploy: replacer(config.replace).concat(fis.plugin('local-deliver', {
                 to: './output/template/' + config.version
-            })
+            }))
         })
         .match('/page/(**.vm)', {
             release: '$1'
@@ -148,4 +148,24 @@ function mediaDebugAndDeploy(config) {
         .match('*.png', {
             optimizer: fiskit.plugin('png-compressor')
         })
+}
+
+/**
+ * 加载fis3-deploy-replace插件
+ * @param opt {Object|Array}
+ * @example
+ *   { from: 'a', to: 'b' } or [ { from: 'a', to: 'b' }, { from: 'a0', to: 'b0' }]
+ */
+function replacer(opt) {
+    var r = [];
+    if(!opt) {
+        return r;
+    }
+    if(!Array.isArray(opt)) {
+        opt = [opt];
+    }
+    opt.forEach(function(raw) {
+        r.push(fis.plugin('replace', raw));
+    });
+    return r;
 }
