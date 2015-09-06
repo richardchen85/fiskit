@@ -102,9 +102,13 @@ function mediaVM(config) {
     var tmpVelocity = fiskit.util.merge({parse: false}, config.velocity);
     fiskit
         .media('vm')
+        .match('*', {
+            domain: config.cdnUrl + '/' + config.version
+        })
         .match('*.vm', {
             parser: fiskit.plugin('velocity', tmpVelocity),
             rExt: '.vm',
+            loaderLang: 'html',
             deploy: replacer(config.replace).concat(fis.plugin('local-deliver', {
                 to: './output/template/' + config.version
             }))
