@@ -1,4 +1,4 @@
-// æ‰©å±•fisçš„ä¸€äº›åŸºç¡€äº‹æƒ…
+// À©Õ¹fisµÄÒ»Ğ©»ù´¡ÊÂÇé
 var fiskit = module.exports = require('fis3');
 fiskit.require.prefixes.unshift('fk');
 fiskit.configName = 'fk-conf';
@@ -7,6 +7,9 @@ fiskit.cli.name = 'fk';
 fiskit.cli.info = require('./package.json');
 fiskit.cli.version = require('./lib/logo');
 
+// ¶ÁÈ¡Ä¬ÈÏÅäÖÃÎÄ¼ş
+var config = require('./lib/config');
+
 // alias
 Object.defineProperty(global, 'fiskit', {
     enumerable: true,
@@ -14,7 +17,7 @@ Object.defineProperty(global, 'fiskit', {
     value: fiskit
 });
 
-// æ·»åŠ å…¨å±€å¿½ç•¥
+// Ìí¼ÓÈ«¾ÖºöÂÔ
 fiskit.set('project.ignore', fiskit.get('project.ignore').concat([
     '{README,readme}.md',
     'fk-conf.js',
@@ -22,17 +25,47 @@ fiskit.set('project.ignore', fiskit.get('project.ignore').concat([
     '_docs/**'
 ]));
 
-// initæ–¹æ³•ï¼Œåˆå§‹åŒ–fisé…ç½®
+// Ä¬ÈÏÅäÖÃ
+fiskit
+    // ÒÔÏÂ»®Ïß¿ªÍ·µÄ²»·¢²¼
+    .match('**/{_*,_*.*}', {
+        release: false
+    })
+    // ¹Ø±Õmd5
+    .match('*', {
+        useHash: false
+    })
+    // ºöÂÔÊı¾İÎÄ¼ş¼°widgetµÄvmÎÄ¼ş
+    .match('{/widget/**.{mock,json,vm},/page/**.{json,mock},/page/macro.vm}', {
+        release: false
+    })
+    // ¿ªÆôcss sprite
+    .match('*.{css,scss}', {
+        sprite: true
+    })
+    // sass
+    .match('*.scss', {
+        parser: fiskit.plugin('sass'),
+        rExt: '.css'
+    })
+    // widgetËùÓĞ×é¼ş¶¼Ä£¿é»¯
+    .match('/widget/**.{css,scss,js}', {
+        isMod: true
+    });
+
+// ¿É×Ô¶¨ÒåfisÅäÖÃ
 fiskit.amount = function(cfg) {
-    // è¯»å–é»˜è®¤é…ç½®æ–‡ä»¶
-    var config = require('./lib/config');
-    // åˆå¹¶ä¼ å…¥é…ç½®
+    // ºÏ²¢´«ÈëÅäÖÃ
     fiskit.util.merge(config, cfg);
 
-    // å¼€å¯æ¨¡å—åŒ–æ’ä»¶
+    // ¶ÁÈ¡release¶îÍâ²ÎÊı
+    config.cdn = fiskit.get('--domain') ? true : config.cdn;
+    config.packed = fiskit.get('--pack') ? true : config.packed;
+
+    // ¿ªÆôÄ£¿é»¯²å¼ş
     config.modules && fiskit.hook(config.modules.mode, config.modules);
 
-    // é™æ€èµ„æºåŠ è½½æ’ä»¶
+    // ¾²Ì¬×ÊÔ´¼ÓÔØ²å¼ş
     fiskit.match('::packager', {
         postpackager: fiskit.plugin('loader', {
             resourceType: config.modules ? config.modules.mode : 'auto',
@@ -41,136 +74,126 @@ fiskit.amount = function(cfg) {
         spriter: fiskit.plugin('csssprites')
     });
 
+    // È«¾ÖÅäÖÃ
     fiskit
-        // ä»¥ä¸‹åˆ’çº¿å¼€å¤´çš„ä¸å‘å¸ƒ
-        .match('**/{_*,_*.*}', {
-            release: false
-        })
         .match('*', {
-            // å…³é—­md5
-            useHash: false,
-            // å¼€å‘ç¯å¢ƒï¼Œcdnå¯é…ç½®å¼€å…³
+            // ¿ª·¢»·¾³£¬cdn¿ÉÅäÖÃ¿ª¹Ø
             domain: config.cdn ? (config.cdnUrl + '/' + config.version) : ''
         })
-        // å¿½ç•¥æ•°æ®æ–‡ä»¶åŠwidgetçš„vmæ–‡ä»¶
-        .match('{/widget/**.{mock,json,vm},/page/**.{json,mock},/page/macro.vm}', {
-            release: false
-        })
-        // é™æ€èµ„æºåŠ md5
+        // ¾²Ì¬×ÊÔ´¼Ómd5
         .match('*.{css,scss,js,png,jpg,gif}', {
             useHash: config.useHash
         })
-        // å¼€å¯css sprite
-        .match('*.{css,scss}', {
-            sprite: true
-        })
-        // æ·»åŠ velocityæ¨¡æ¿å¼•æ“
+        // Ìí¼ÓvelocityÄ£°åÒıÇæ
         .match('/page/(**.vm)', {
             parser: fiskit.plugin('velocity', config.velocity),
             rExt: '.html',
             loaderLang: 'html',
             release: '$1'
         })
-        // sass
-        .match('*.scss', {
-            parser: fiskit.plugin('sass'),
-            rExt: '.css'
-        })
-        // widgetæ‰€æœ‰ç»„ä»¶éƒ½æ¨¡å—åŒ–
-        .match('/widget/**.{css,scss,js}', {
-            isMod: true
-        });
 
-    mediaDev(config);
-
-    mediaVM(config);
-
-    mediaDebugAndDeploy(config);
-};
-
-// é»˜è®¤é…ç½®
-function mediaDev(config) {
-    // é»˜è®¤å‘å¸ƒç›®å½•
+    // ¿ª·¢»·¾³
     config.devPath && fiskit.media('dev').match('*', {
         deploy: fiskit.plugin('local-deliver', {
             to: config.devPath
         })
     });
-}
 
-// åªå‘å¸ƒæ¨¡æ¿æ–‡ä»¶çš„é…ç½®
-function mediaVM(config) {
-    var tmpVelocity = fiskit.util.merge({parse: false}, config.velocity);
-    fiskit
-        .media('vm')
-        .match('*', {
-            domain: config.cdnUrl + '/' + config.version
-        })
-        .match('*.vm', {
-            parser: fiskit.plugin('velocity', tmpVelocity),
-            rExt: '.vm',
-            loaderLang: 'html',
-            deploy: replacer(config.replace).concat(fis.plugin('local-deliver', {
-                to: './output/template/' + config.version
-            }))
-        })
-        .match('/page/(**.vm)', {
-            release: '$1'
-        })
-        .match('/widget/**.vm', {
-            release: '$0'
-        });
-}
+    // Ö»·¢²¼VMÄ£°å
+    (function(config) {
+        var tmpVelocity = fiskit.util.merge({parse: false}, config.velocity);
+        /**
+         * ¼ÓÔØfis3-deploy-replace²å¼ş
+         * @param opt {Object|Array}
+         * @example
+         *   { from: 'a', to: 'b' } or [ { from: 'a', to: 'b' }, { from: 'a0', to: 'b0' }]
+         */
+        var replacer = function(opt) {
+            var r = [];
+            if(!opt) {
+                return r;
+            }
+            if(!Array.isArray(opt)) {
+                opt = [opt];
+            }
+            opt.forEach(function(raw) {
+                r.push(fis.plugin('replace', raw));
+            });
+            return r;
+        };
 
-// debugå’Œprodç¯å¢ƒå…±åŒé…ç½®
-function mediaDebugAndDeploy(config) {
-    ['debug', 'prod'].forEach(function(_media) {
         fiskit
-            .media(_media)
-            .match('/{page/**.vm,mock/**}', {
-                release: false
-            })
+            .media('vm')
             .match('*', {
-                domain: config.cdnUrl + '/' + config.version,
-                deploy: fiskit.plugin('local-deliver', {
-                    to: 'output/' + _media + '/' + config.version
+                domain: config.cdnUrl + '/' + config.version
+            })
+            .match('*.vm', {
+                parser: fiskit.plugin('velocity', tmpVelocity),
+                rExt: '.vm',
+                loaderLang: 'html',
+                deploy: replacer(config.replace).concat(fis.plugin('local-deliver', {
+                    to: './output/template/' + config.version
+                }))
+            })
+            .match('/page/(**.vm)', {
+                release: '$1'
+            })
+            .match('/widget/**.vm', {
+                release: '$0'
+            });
+    })(config);
+
+    // debugºÍprod»·¾³
+    (function(config) {
+        ['debug', 'prod'].forEach(function(_media) {
+            fiskit
+                .media(_media)
+                .match('/{page/**.vm,mock/**}', {
+                    release: false
+                })
+                .match('*', {
+                    domain: config.cdnUrl + '/' + config.version,
+                    deploy: fiskit.plugin('local-deliver', {
+                        to: 'output/' + _media + '/' + config.version
+                    })
+                })
+        });
+
+        // Éú²ú»·¾³ÉèÖÃ
+        // ·¢²¼ºóÖ±½ÓÉÏ´«CDN·şÎñÆ÷
+        fiskit
+            .media('prod')
+            .match('*.js', {
+                optimizer: fiskit.plugin('uglify-js', {
+                    mangle: ['require', 'define']
                 })
             })
-    });
-
-    // ç”Ÿäº§ç¯å¢ƒè®¾ç½®
-    // å‘å¸ƒåç›´æ¥ä¸Šä¼ CDNæœåŠ¡å™¨
-    fiskit
-        .media('prod')
-        .match('*.js', {
-            optimizer: fiskit.plugin('uglify-js', {
-                mangle: ['require', 'define']
+            .match('*.{css,scss}', {
+                optimizer: fiskit.plugin('clean-css')
             })
-        })
-        .match('*.{css,scss}', {
-            optimizer: fiskit.plugin('clean-css')
-        })
-        .match('*.png', {
-            optimizer: fiskit.plugin('png-compressor')
-        })
-}
+            .match('*.png', {
+                optimizer: fiskit.plugin('png-compressor')
+            })
+    })(config);
 
-/**
- * åŠ è½½fis3-deploy-replaceæ’ä»¶
- * @param opt {Object|Array}
- * @example
- *   { from: 'a', to: 'b' } or [ { from: 'a', to: 'b' }, { from: 'a0', to: 'b0' }]
- */
-function replacer(opt) {
-    var r = [];
-    if(!opt) {
-        return r;
-    }
-    if(!Array.isArray(opt)) {
-        opt = [opt];
-    }
-    opt.forEach(function(raw) {
-        r.push(fis.plugin('replace', raw));
-    });
-    return r;
-}
+    // ´ò°üÅäÖÃ£¬Ä¬ÈÏÎªnullÎŞ´ò°üÅäÖÃ
+    // media('dev')»·¾³Ö»ÔÚconfig.packedÎªtrueÊ±´ò°ü
+    // ÆäËümediaÄ¬ÈÏ´ò°ü
+    // @example
+    //   {
+    //     '/widget/**.css': {
+    //       packTo: '/widget/widget_pkg.css'
+    //     }
+    //   }
+    config.package && (function(packConfig) {
+        var _media, kv;
+        ['dev', 'vm', 'debug', 'prod'].forEach(function(media) {
+            if(media !== 'dev' || config.packed) {
+                _media = fiskit.media(media);
+                for(kv in packConfig) {
+                    _media.match(kv, packConfig[kv]);
+                }
+            }
+        });
+    })(config.package);
+};

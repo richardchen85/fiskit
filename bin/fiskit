@@ -17,13 +17,31 @@ cli.launch({
     cwd: argv.r || argv.root,
     configPath: argv.f || argv.file
 }, function (env) {
-    var fis;
+    var fiskit;
     if (!env.modulePath) {
-        fis = require('../');
+        fiskit = require('../');
     } else {
-        fis = require(env.modulePath);
+        fiskit = require(env.modulePath);
     }
-    fis.set('system.localNPMFolder', path.join(env.cwd, 'node_modules/fiskit'));
-    fis.set('system.globalNPMFolder', path.dirname(__dirname));
-    fis.cli.run(argv, env);
+    fiskit.set('system.localNPMFolder', path.join(env.cwd, 'node_modules/fiskit'));
+    fiskit.set('system.globalNPMFolder', path.dirname(__dirname));
+
+    // 截获release后续参数
+    argv._[0] === 'release' && setReleaseArg(argv);
+
+    fiskit.cli.run(argv, env);
 });
+
+// 获取release参数，添加fiskit设置
+function setReleaseArg(argv) {
+    if(argv.D || argv.domain) {
+        fiskit.set('--domain', true);
+        delete argv.D;
+        delete argv.domain;
+    }
+    if(argv.p || argv.pack) {
+        fiskit.set('--pack', true);
+        delete argv.p;
+        delete argv.pack;
+    }
+}
