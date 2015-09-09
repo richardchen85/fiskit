@@ -16,10 +16,10 @@ Object.defineProperty(global, 'fiskit', {
 
 // 添加全局忽略
 fiskit.set('project.ignore', fiskit.get('project.ignore').concat([
-    'README.md',
+    '{README,readme}.md',
     'fk-conf.js',
     '*.iml',
-    '/{_docs,sass}/**'
+    '_docs/**'
 ]));
 
 // init方法，初始化fis配置
@@ -31,7 +31,7 @@ fiskit.amount = function(cfg) {
 
     // 开启模块化插件
     config.modules && fiskit.hook(config.modules.mode, config.modules);
-    
+
     // 静态资源加载插件
     fiskit.match('::packager', {
         postpackager: fiskit.plugin('loader', {
@@ -40,17 +40,12 @@ fiskit.amount = function(cfg) {
         }),
         spriter: fiskit.plugin('csssprites')
     });
-    
-    mediaDev(config);
 
-    mediaVM(config);
-    
-    mediaDebugAndDeploy(config);
-};
-
-// 默认配置
-function mediaDev(config) {
     fiskit
+        // 以下划线开头的不发布
+        .match('**/{_*,_*.*}', {
+            release: false
+        })
         .match('*', {
             // 关闭md5
             useHash: false,
@@ -76,9 +71,6 @@ function mediaDev(config) {
             loaderLang: 'html',
             release: '$1'
         })
-        .match('/page/macro.vm', {
-            release: false
-        })
         // sass
         .match('*.scss', {
             parser: fiskit.plugin('sass'),
@@ -89,6 +81,15 @@ function mediaDev(config) {
             isMod: true
         });
 
+    mediaDev(config);
+
+    mediaVM(config);
+
+    mediaDebugAndDeploy(config);
+};
+
+// 默认配置
+function mediaDev(config) {
     // 默认发布目录
     config.devPath && fiskit.media('dev').match('*', {
         deploy: fiskit.plugin('local-deliver', {
