@@ -91,7 +91,7 @@ fiskit.amount = function(cfg) {
             useHash: config.useHash
         })
         // 添加velocity模板引擎
-        .match('*.vm)', {
+        .match('*.vm', {
             parser: fiskit.plugin('velocity', config.velocity),
             rExt: '.html',
             loaderLang: 'html'
