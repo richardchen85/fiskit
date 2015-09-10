@@ -35,6 +35,12 @@ fiskit
     .match('*', {
         useHash: false
     })
+    .match('/server.conf', {
+        release: '/config/$0'
+    })
+    .match('/map.json', {
+        release: '/config/$0'
+    })
     // 忽略数据文件及widget的vm文件
     .match('{/widget/**.{mock,json,vm},/page/**.{json,mock},/page/macro.vm}', {
         release: false
@@ -85,10 +91,12 @@ fiskit.amount = function(cfg) {
             useHash: config.useHash
         })
         // 添加velocity模板引擎
-        .match('/page/(**.vm)', {
+        .match('*.vm)', {
             parser: fiskit.plugin('velocity', config.velocity),
             rExt: '.html',
-            loaderLang: 'html',
+            loaderLang: 'html'
+        })
+        .match('/page/(**/*.vm)', {
             release: '$1'
         })
 
@@ -128,14 +136,12 @@ fiskit.amount = function(cfg) {
                 domain: config.cdnUrl + '/' + config.version
             })
             .match('*.vm', {
-                parser: fiskit.plugin('velocity', tmpVelocity),
                 rExt: '.vm',
-                loaderLang: 'html',
                 deploy: replacer(config.replace).concat(fis.plugin('local-deliver', {
                     to: './output/template/' + config.version
                 }))
             })
-            .match('/page/(**.vm)', {
+            .match('/page/(**/*.vm)', {
                 release: '$1'
             })
             .match('/widget/**.vm', {
