@@ -16,44 +16,45 @@ fk release [dev|vm|debug|prod]
 </pre>
 
 ## 文档
-
 快速入门、配置、插件开发以及原理等文档 [FIS官方文档](http://fis.baidu.com/fis3/docs/beginning/intro.html)
-
 
 ## 目录结构
 <pre>
 root
-  ├ _docs 项目文档目录
-  ├ page 页面文件
+  ├ _docs // 项目文档目录
+  ├ page // 页面文件
   │  ├ home
   │  │  └ home.vm
   │  ├ list
   │  │  └ list.vm
-  │  └ detail
-  │     └ detail.vm
-  ├ sass SASS库目录
-  ├ mock 测试模拟数据目录
-  ├ static 静态资源目录
-  │  ├ img 图片目录
-  │  ├ css css目录
-  │  └ js 非模块化js目录
-  │     ├ lib 模块化框架，如requirejs, modjs, seajs等
-  │     └ common 公共库文件，如bootstrap, jqueryui等
-  └ widget 组件目录
-     ├ header
-     │  ├ header.vm
-     │  ├ header.js
-     │  ├ header.scss
-     │  ├ header.mock
-     └ nav
-        ├ nav.vm
-        ├ nav.js
-        ├ nav.scss
-        └ nav.mock
+  │  ├ detail
+  │  │  └ detail.vm
+  ├ sass // SASS库目录
+  ├ mock // 测试模拟数据目录
+  ├ static // 静态资源目录
+  │  ├ common // 公共文件目录
+  │  │  ├ img
+  │  │  ├ css
+  │  │  └ lib // 非模块化js目录
+  │  ├ components // 模块化组件目录
+  │  │  ├ dialog
+  │  │  │  ├ dialog.js
+  │  │  │  └ dialog.css
+  │  │  ├ jquery-validate
+  │  │  │  └ jquery.validate.js
+  ├ widget // 页面组件目录
+  │  ├ header
+  │  │  ├ header.vm
+  │  │  ├ header.js
+  │  │  ├ header.scss
+  │  │  ├ header.mock
+  │  ├ nav
+  │  │  ├ nav.vm
+  │  │  ├ nav.js
+  │  │  ├ nav.scss
+  │  │  └ nav.mock
 </pre>
-
 ## 配置例子
-
 *fk-conf.js*
 
 ```

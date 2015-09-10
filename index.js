@@ -54,8 +54,8 @@ fiskit
         parser: fiskit.plugin('sass'),
         rExt: '.css'
     })
-    // widget所有组件都模块化
-    .match('/widget/**.{css,scss,js}', {
+    // widget和components所有js模块化
+    .match('/{widget,static/components}/**.js', {
         isMod: true
     });
 
