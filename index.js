@@ -1,4 +1,4 @@
-// À©Õ¹fisµÄÒ»Ğ©»ù´¡ÊÂÇé
+ï»¿// æ‰©å±•fisçš„ä¸€äº›åŸºç¡€äº‹æƒ…
 var fiskit = module.exports = require('fis3');
 fiskit.require.prefixes.unshift('fk');
 fiskit.configName = 'fk-conf';
@@ -7,7 +7,7 @@ fiskit.cli.name = 'fk';
 fiskit.cli.info = require('./package.json');
 fiskit.cli.version = require('./lib/logo');
 
-// ¶ÁÈ¡Ä¬ÈÏÅäÖÃÎÄ¼ş
+// è¯»å–é»˜è®¤é…ç½®æ–‡ä»¶
 var config = require('./lib/config');
 
 // alias
@@ -17,7 +17,7 @@ Object.defineProperty(global, 'fiskit', {
     value: fiskit
 });
 
-// Ìí¼ÓÈ«¾ÖºöÂÔ
+// æ·»åŠ å…¨å±€å¿½ç•¥
 fiskit.set('project.ignore', fiskit.get('project.ignore').concat([
     '{README,readme}.md',
     'fk-conf.js',
@@ -25,21 +25,21 @@ fiskit.set('project.ignore', fiskit.get('project.ignore').concat([
     '_docs/**'
 ]));
 
-// Ä¬ÈÏÅäÖÃ
+// é»˜è®¤é…ç½®
 fiskit
-    // ÒÔÏÂ»®Ïß¿ªÍ·µÄ²»·¢²¼
-    .match('**/{_*,_*.*}', {
+    // ä»¥ä¸‹åˆ’çº¿å¼€å¤´çš„ä¸å‘å¸ƒ
+    .match('**/_*', {
         release: false
     })
-    // ¹Ø±Õmd5
+    // å…³é—­md5
     .match('*', {
         useHash: false
     })
-    // ºöÂÔÊı¾İÎÄ¼ş¼°widgetµÄvmÎÄ¼ş
+    // å¿½ç•¥æ•°æ®æ–‡ä»¶åŠwidgetçš„vmæ–‡ä»¶
     .match('{/widget/**.{mock,json,vm},/page/**.{json,mock},/page/macro.vm}', {
         release: false
     })
-    // ¿ªÆôcss sprite
+    // å¼€å¯css sprite
     .match('*.{css,scss}', {
         sprite: true
     })
@@ -48,24 +48,24 @@ fiskit
         parser: fiskit.plugin('sass'),
         rExt: '.css'
     })
-    // widgetËùÓĞ×é¼ş¶¼Ä£¿é»¯
+    // widgetæ‰€æœ‰ç»„ä»¶éƒ½æ¨¡å—åŒ–
     .match('/widget/**.{css,scss,js}', {
         isMod: true
     });
 
-// ¿É×Ô¶¨ÒåfisÅäÖÃ
+// å¯è‡ªå®šä¹‰fisé…ç½®
 fiskit.amount = function(cfg) {
-    // ºÏ²¢´«ÈëÅäÖÃ
+    // åˆå¹¶ä¼ å…¥é…ç½®
     fiskit.util.merge(config, cfg);
 
-    // ¶ÁÈ¡release¶îÍâ²ÎÊı
+    // è¯»å–releaseé¢å¤–å‚æ•°
     config.cdn = fiskit.get('--domain') ? true : config.cdn;
     config.packed = fiskit.get('--pack') ? true : config.packed;
 
-    // ¿ªÆôÄ£¿é»¯²å¼ş
+    // å¼€å¯æ¨¡å—åŒ–æ’ä»¶
     config.modules && fiskit.hook(config.modules.mode, config.modules);
 
-    // ¾²Ì¬×ÊÔ´¼ÓÔØ²å¼ş
+    // é™æ€èµ„æºåŠ è½½æ’ä»¶
     fiskit.match('::packager', {
         postpackager: fiskit.plugin('loader', {
             resourceType: config.modules ? config.modules.mode : 'auto',
@@ -74,17 +74,17 @@ fiskit.amount = function(cfg) {
         spriter: fiskit.plugin('csssprites')
     });
 
-    // È«¾ÖÅäÖÃ
+    // å…¨å±€é…ç½®
     fiskit
         .match('*', {
-            // ¿ª·¢»·¾³£¬cdn¿ÉÅäÖÃ¿ª¹Ø
+            // å¼€å‘ç¯å¢ƒï¼Œcdnå¯é…ç½®å¼€å…³
             domain: config.cdn ? (config.cdnUrl + '/' + config.version) : ''
         })
-        // ¾²Ì¬×ÊÔ´¼Ómd5
+        // é™æ€èµ„æºåŠ md5
         .match('*.{css,scss,js,png,jpg,gif}', {
             useHash: config.useHash
         })
-        // Ìí¼ÓvelocityÄ£°åÒıÇæ
+        // æ·»åŠ velocityæ¨¡æ¿å¼•æ“
         .match('/page/(**.vm)', {
             parser: fiskit.plugin('velocity', config.velocity),
             rExt: '.html',
@@ -92,18 +92,18 @@ fiskit.amount = function(cfg) {
             release: '$1'
         })
 
-    // ¿ª·¢»·¾³
+    // å¼€å‘ç¯å¢ƒ
     config.devPath && fiskit.media('dev').match('*', {
         deploy: fiskit.plugin('local-deliver', {
             to: config.devPath
         })
     });
 
-    // Ö»·¢²¼VMÄ£°å
+    // åªå‘å¸ƒVMæ¨¡æ¿
     (function(config) {
         var tmpVelocity = fiskit.util.merge({parse: false}, config.velocity);
         /**
-         * ¼ÓÔØfis3-deploy-replace²å¼ş
+         * åŠ è½½fis3-deploy-replaceæ’ä»¶
          * @param opt {Object|Array}
          * @example
          *   { from: 'a', to: 'b' } or [ { from: 'a', to: 'b' }, { from: 'a0', to: 'b0' }]
@@ -143,7 +143,7 @@ fiskit.amount = function(cfg) {
             });
     })(config);
 
-    // debugºÍprod»·¾³
+    // debugå’Œprodç¯å¢ƒ
     (function(config) {
         ['debug', 'prod'].forEach(function(_media) {
             fiskit
@@ -159,8 +159,8 @@ fiskit.amount = function(cfg) {
                 })
         });
 
-        // Éú²ú»·¾³ÉèÖÃ
-        // ·¢²¼ºóÖ±½ÓÉÏ´«CDN·şÎñÆ÷
+        // ç”Ÿäº§ç¯å¢ƒè®¾ç½®
+        // å‘å¸ƒåç›´æ¥ä¸Šä¼ CDNæœåŠ¡å™¨
         fiskit
             .media('prod')
             .match('*.js', {
@@ -176,9 +176,9 @@ fiskit.amount = function(cfg) {
             })
     })(config);
 
-    // ´ò°üÅäÖÃ£¬Ä¬ÈÏÎªnullÎŞ´ò°üÅäÖÃ
-    // media('dev')»·¾³Ö»ÔÚconfig.packedÎªtrueÊ±´ò°ü
-    // ÆäËümediaÄ¬ÈÏ´ò°ü
+    // æ‰“åŒ…é…ç½®ï¼Œé»˜è®¤ä¸ºnullæ— æ‰“åŒ…é…ç½®
+    // media('dev')ç¯å¢ƒåªåœ¨config.packedä¸ºtrueæ—¶æ‰“åŒ…
+    // å…¶å®ƒmediaé»˜è®¤æ‰“åŒ…
     // @example
     //   {
     //     '/widget/**.css': {
