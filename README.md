@@ -53,6 +53,8 @@ root
   │  │  ├ nav.js
   │  │  ├ nav.scss
   │  │  └ nav.mock
+  ├ fk-conf.js // fiskit配置文件
+  ├ server.conf // 本地服务器rewrite规则
 </pre>
 ## 配置例子
 *fk-conf.js*
