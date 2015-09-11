@@ -30,7 +30,7 @@ fiskit
     // 以下划线开头的不发布
     .match('**/_*', {
         release: false
-    })
+    }, true)
     // 关闭md5
     .match('*', {
         useHash: false
