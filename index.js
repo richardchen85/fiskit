@@ -158,6 +158,9 @@ fiskit.amount = function(cfg) {
                 .match('/{page/**.vm,mock/**}', {
                     release: false
                 })
+                .match('{server.conf,map.json}', {
+                    release: false
+                })
                 .match('*', {
                     domain: config.cdnUrl + '/' + config.version,
                     deploy: fiskit.plugin('local-deliver', {

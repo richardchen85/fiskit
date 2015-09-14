@@ -1,6 +1,6 @@
 {
   "name": "fiskit",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "A front-end toolkit base on fis",
   "main": "index.js",
   "bin": {
@@ -28,7 +28,7 @@
     "fis-optimizer-png-compressor": "^0.1.0",
     "fis-optimizer-uglify-js": "^0.1.13",
     "fis-parser-sass": "^0.3.9",
-    "fis-parser-velocity": "^0.2.6",
+    "fis-parser-velocity": "^0.2.7",
     "fis3": "^3.1.3",
     "fis3-deploy-replace": "^1.0.2",
     "fis3-hook-amd": "^0.1.0",
