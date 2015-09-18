@@ -96,7 +96,7 @@ fiskit.amount = function(cfg) {
             rExt: '.html',
             loaderLang: 'html'
         })
-        .match('/page/(**/*.vm)', {
+        .match('/page/(**.vm)', {
             release: '$1'
         })
 
@@ -142,7 +142,7 @@ fiskit.amount = function(cfg) {
                     to: './output/template/' + config.version
                 }))
             })
-            .match('/page/(**/*.vm)', {
+            .match('/page/(**.vm)', {
                 release: '$1'
             })
             .match('/widget/**.vm', {
