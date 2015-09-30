@@ -51,7 +51,9 @@ fiskit
     })
     // sass
     .match('*.scss', {
-        parser: fiskit.plugin('sass'),
+        parser: fiskit.plugin('sass', {
+            outputStyle: 'expanded'
+        }),
         rExt: '.css'
     })
     // widget和components所有js模块化
