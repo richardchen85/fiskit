@@ -125,7 +125,7 @@ fiskit.amount = function(cfg) {
                 opt = [opt];
             }
             opt.forEach(function(raw) {
-                r.push(fis.plugin('replace', raw));
+                r.push(fiskit.plugin('replace', raw));
             });
             return r;
         };
@@ -138,7 +138,7 @@ fiskit.amount = function(cfg) {
             .match('*.vm', {
                 parser: fiskit.plugin('velocity', tmpVelocity),
                 rExt: '.vm',
-                deploy: replacer(config.replace).concat(fis.plugin('local-deliver', {
+                deploy: replacer(config.replace).concat(fiskit.plugin('local-deliver', {
                     to: './output/template/' + config.version
                 }))
             })
