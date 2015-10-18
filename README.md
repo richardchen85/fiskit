@@ -30,7 +30,7 @@ root
   │  ├ detail
   │  │  └ detail.vm
   ├ sass // SASS库目录
-  ├ mock // 测试模拟数据目录
+  ├ test // 测试模拟数据目录
   ├ static // 静态资源目录
   │  ├ common // 公共文件目录
   │  │  ├ img
