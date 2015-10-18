@@ -144,6 +144,14 @@ fiskit.amount = function(cfg) {
                     to: './output/template/' + config.version
                 }))
             })
+            .match('*.vm:js', {
+                optimizer: fiskit.plugin('uglify-js', {
+                    mangle: ['require', 'define']
+                })
+            })
+            .match('*.vm:css', {
+                optimizer: fiskit.plugin('clean-css')
+            })
             .match('/page/(**.vm)', {
                 release: '$1'
             })
@@ -152,12 +160,12 @@ fiskit.amount = function(cfg) {
             });
     })(config);
 
-    // debug和prod环境
+    // debug、prod和vm环境共有
     (function(config) {
         ['debug', 'prod'].forEach(function(_media) {
             fiskit
                 .media(_media)
-                .match('/{page/**.vm,mock/**}', {
+                .match('/{page/**.vm,test/**,mock/**}', {
                     release: false
                 })
                 .match('{server.conf,map.json}', {
@@ -171,21 +179,23 @@ fiskit.amount = function(cfg) {
                 })
         });
 
-        // 生产环境设置
+        // 生产环境和vm环境都会压缩js和css
         // 发布后直接上传CDN服务器
-        fiskit
-            .media('prod')
-            .match('*.js', {
-                optimizer: fiskit.plugin('uglify-js', {
-                    mangle: ['require', 'define']
+        ['prod', 'vm'].forEach(function(_media) {
+            fiskit
+                .media(_media)
+                .match('*.js', {
+                    optimizer: fiskit.plugin('uglify-js', {
+                        mangle: ['require', 'define']
+                    })
                 })
-            })
-            .match('*.{css,scss}', {
-                optimizer: fiskit.plugin('clean-css')
-            })
-            .match('*.png', {
-                optimizer: fiskit.plugin('png-compressor')
-            })
+                .match('*.{css,scss}', {
+                    optimizer: fiskit.plugin('clean-css')
+                })
+                .match('*.png', {
+                    optimizer: fiskit.plugin('png-compressor')
+                })
+        });
     })(config);
 
     // 打包配置，默认为null无打包配置
