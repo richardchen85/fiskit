@@ -55,10 +55,6 @@ fiskit
             outputStyle: 'expanded'
         }),
         rExt: '.css'
-    })
-    // widget和components所有js模块化
-    .match('/{widget,static/components}/**.js', {
-        isMod: true
     });
 
 // 可自定义fis配置
@@ -71,7 +67,13 @@ fiskit.amount = function(cfg) {
     config.packed = fiskit.get('--pack') ? true : config.packed;
 
     // 开启模块化插件
-    config.modules && fiskit.hook(config.modules.mode, config.modules);
+    if(config.modules) {
+        fiskit.hook(config.modules.mode, config.modules);
+        // widget和components所有js模块化
+        fiskit.match('/{widget,static/components}/**.js', {
+            isMod: true
+        });
+    }
 
     // 静态资源加载插件
     fiskit.match('::packager', {
@@ -100,7 +102,7 @@ fiskit.amount = function(cfg) {
         })
         .match('/page/(**.vm)', {
             release: '$1'
-        })
+        });
 
     // 开发环境
     config.devPath && fiskit.media('dev').match('*', {
