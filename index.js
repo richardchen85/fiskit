@@ -194,9 +194,11 @@ fiskit.amount = function(cfg) {
                 .match('*.{css,scss}', {
                     optimizer: fiskit.plugin('clean-css')
                 })
-                .match('*.png', {
-                    optimizer: fiskit.plugin('png-compressor')
-                })
+        });
+
+        // 生产环境处理png图片压缩
+        fiskit.media('prod').match('*.png', {
+            optimizer: fiskit.plugin('png-compressor')
         });
     })(config);
 
