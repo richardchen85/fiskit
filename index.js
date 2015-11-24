@@ -62,6 +62,8 @@ fiskit.amount = function(cfg) {
     // 合并传入配置
     fiskit.util.merge(config, cfg);
 
+    var cdnUrl = config.cdnUrl + (config.version ? '/' + config.version : '');
+
     // 读取release额外参数
     config.cdn = fiskit.get('--domain') ? true : config.cdn;
     config.packed = fiskit.get('--pack') ? true : config.packed;
@@ -88,7 +90,7 @@ fiskit.amount = function(cfg) {
     fiskit
         .match('*', {
             // 开发环境，cdn可配置开关
-            domain: config.cdn ? (config.cdnUrl + '/' + config.version) : ''
+            domain: config.cdn ? cdnUrl : ''
         })
         // 静态资源加md5
         .match('*.{css,scss,js,png,jpg,gif}', {
@@ -137,7 +139,7 @@ fiskit.amount = function(cfg) {
         fiskit
             .media('vm')
             .match('*', {
-                domain: config.cdnUrl + '/' + config.version
+                domain: cdnUrl
             })
             .match('*.vm', {
                 parser: fiskit.plugin('velocity', tmpVelocity),
@@ -174,7 +176,7 @@ fiskit.amount = function(cfg) {
                     release: false
                 })
                 .match('*', {
-                    domain: config.cdnUrl + '/' + config.version,
+                    domain: cdnUrl,
                     deploy: fiskit.plugin('local-deliver', {
                         to: 'output/' + _media + '/' + config.version
                     })
