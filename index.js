@@ -1,4 +1,4 @@
-ï»¿// æ‰©å±•fisçš„ä¸€äº›åŸºç¡€äº‹æƒ…
+// À©Õ¹fisµÄÒ»Ğ©»ù´¡ÊÂÇé
 var fiskit = module.exports = require('fis3');
 fiskit.require.prefixes.unshift('fk');
 fiskit.configName = 'fk-conf';
@@ -7,9 +7,6 @@ fiskit.cli.name = 'fk';
 fiskit.cli.info = require('./package.json');
 fiskit.cli.version = require('./lib/logo');
 
-// è¯»å–é»˜è®¤é…ç½®æ–‡ä»¶
-var config = require('./lib/config');
-
 // alias
 Object.defineProperty(global, 'fiskit', {
     enumerable: true,
@@ -17,7 +14,7 @@ Object.defineProperty(global, 'fiskit', {
     value: fiskit
 });
 
-// æ·»åŠ å…¨å±€å¿½ç•¥
+// Ìí¼ÓÈ«¾ÖºöÂÔ
 fiskit.set('project.ignore', fiskit.get('project.ignore').concat([
     '{README,readme}.md',
     'fk-conf.js',
@@ -25,59 +22,49 @@ fiskit.set('project.ignore', fiskit.get('project.ignore').concat([
     '_docs/**'
 ]));
 
-// é»˜è®¤é…ç½®
-fiskit
-    // ä»¥ä¸‹åˆ’çº¿å¼€å¤´çš„ä¸å‘å¸ƒ
-    .match('**/_*', {
-        release: false
-    }, true)
-    // å…³é—­md5
-    .match('*', {
-        useHash: false
-    })
-    .match('/server.conf', {
-        release: '/config/$0'
-    })
-    .match('/map.json', {
-        release: '/config/$0'
-    })
-    // å¿½ç•¥æ•°æ®æ–‡ä»¶åŠwidgetçš„vmæ–‡ä»¶
-    .match('{/widget/**.{mock,json,vm},/page/**.{json,mock},/page/macro.vm}', {
-        release: false
-    })
-    // å¼€å¯css sprite
-    .match('*.{css,scss}', {
-        sprite: true
-    })
-    // sass
-    .match('*.scss', {
-        parser: fiskit.plugin('sass', {
-            outputStyle: 'expanded'
-        }),
-        rExt: '.css'
-    });
+var config, currentMedia, cdnUrl;
 
-// å¯è‡ªå®šä¹‰fisé…ç½®
-fiskit.amount = function(cfg) {
-    // åˆå¹¶ä¼ å…¥é…ç½®
+// ¿É×Ô¶¨ÒåfisÅäÖÃ
+fiskit.amount = function(cfg, callback) {
+    // ¶ÁÈ¡Ä¬ÈÏÅäÖÃÎÄ¼ş
+    config = require('./lib/config');
+    
+    // ºÏ²¢´«ÈëÅäÖÃ
     fiskit.util.merge(config, cfg);
+    
+    setDefault();
+    
+    initGlobal();
+    
+    initOptimizer();
+    
+    callback && callback();
+};
 
-    var cdnUrl = config.cdnUrl + (config.version ? '/' + config.version : '');
+// Ä¬ÈÏÉèÖÃ
+function setDefault() {
+    cdnUrl = config.cdnUrl + (config.version ? '/' + config.version : '');
+    currentMedia = fiskit.project.currentMedia();
 
-    // è¯»å–releaseé¢å¤–å‚æ•°
+    // ¶ÁÈ¡release¶îÍâ²ÎÊı
     config.cdn = fiskit.get('--domain') ? true : config.cdn;
     config.packed = fiskit.get('--pack') ? true : config.packed;
 
-    // å¼€å¯æ¨¡å—åŒ–æ’ä»¶
+    // ¿ªÆôÄ£¿é»¯²å¼ş
     if(config.modules) {
         fiskit.hook(config.modules.mode, config.modules);
-        // widgetå’Œcomponentsæ‰€æœ‰jsæ¨¡å—åŒ–
+        // widgetºÍcomponentsËùÓĞjsÄ£¿é»¯
         fiskit.match('/{widget,static/components}/**.js', {
             isMod: true
         });
     }
+    
+    // vm»·¾³ÏÂ²»¿ªÆôvmµÄparser
+    if(currentMedia === 'vm') {
+        config.velocity.parse = false;
+    }
 
-    // é™æ€èµ„æºåŠ è½½æ’ä»¶
+    // ¾²Ì¬×ÊÔ´¼ÓÔØ²å¼ş
     fiskit.match('::packager', {
         postpackager: fiskit.plugin('loader', {
             resourceType: config.modules ? config.modules.mode : 'auto',
@@ -85,18 +72,45 @@ fiskit.amount = function(cfg) {
         }),
         spriter: fiskit.plugin('csssprites')
     });
+}
 
-    // å…¨å±€é…ç½®
+// È«¾ÖÅäÖÃ
+function initGlobal() {
     fiskit
+        // ÒÔÏÂ»®Ïß¿ªÍ·µÄ²»·¢²¼
+        .match('**/_*', {
+            release: false
+        }, true)
+        // ¹Ø±Õmd5
         .match('*', {
-            // å¼€å‘ç¯å¢ƒï¼Œcdnå¯é…ç½®å¼€å…³
-            domain: config.cdn ? cdnUrl : ''
+            useHash: false,
+            // ¿ª·¢»·¾³£¬cdn¿ÉÅäÖÃ¿ª¹Ø
+            domain: currentMedia !== 'dev' ? cdnUrl : (config.cdn ? cdnUrl : '')
         })
-        // é™æ€èµ„æºåŠ md5
+        // ¾²Ì¬×ÊÔ´¼Ómd5
         .match('*.{css,scss,js,png,jpg,gif}', {
             useHash: config.useHash
         })
-        // æ·»åŠ velocityæ¨¡æ¿å¼•æ“
+        // ÅäÖÃÎÄ¼şÊä³ö£¨Ö»ÓĞdev»·¾³ĞèÒª£©
+        .match('{server.conf,map.json}', {
+            release: currentMedia === 'dev' ? '/config/$0' : false
+        })
+        // ºöÂÔmockÎÄ¼ş¼°widgetµÄvmÎÄ¼ş
+        .match('{/widget/**.{mock,json,vm},/page/**.{json,mock},/page/macro.vm}', {
+            release: false
+        })
+        // ¿ªÆôcss sprite
+        .match('*.{css,scss}', {
+            sprite: true
+        })
+        // sass
+        .match('*.scss', {
+            parser: fiskit.plugin('sass', {
+                outputStyle: 'expanded'
+            }),
+            rExt: '.css'
+        })
+        // Ìí¼ÓvelocityÄ£°åÒıÇæ
         .match('*.vm', {
             parser: fiskit.plugin('velocity', config.velocity),
             rExt: '.html',
@@ -104,109 +118,96 @@ fiskit.amount = function(cfg) {
         })
         .match('/page/(**.vm)', {
             release: '$1'
-        });
-
-    // å¼€å‘ç¯å¢ƒ
-    config.devPath && fiskit.media('dev').match('*', {
-        deploy: fiskit.plugin('local-deliver', {
-            to: config.devPath
         })
-    });
-
-    // åªå‘å¸ƒVMæ¨¡æ¿
-    (function(config) {
-        var tmpVelocity = fiskit.util.merge({parse: false}, config.velocity);
-        /**
-         * åŠ è½½fis3-deploy-replaceæ’ä»¶
-         * @param opt {Object|Array}
-         * @example
-         *   { from: 'a', to: 'b' } or [ { from: 'a', to: 'b' }, { from: 'a0', to: 'b0' }]
-         */
-        var replacer = function(opt) {
-            var r = [];
-            if(!opt) {
-                return r;
-            }
-            if(!Array.isArray(opt)) {
-                opt = [opt];
-            }
-            opt.forEach(function(raw) {
-                r.push(fiskit.plugin('replace', raw));
-            });
-            return r;
-        };
-
+        
+    // ¾²Ì¬×ÊÔ´²»ĞèÒªvmºÍtestÊı¾İ
+    if(currentMedia === 'debug' || currentMedia === 'prod') {
+        fiskit.match('/{page/**.vm,test/**,mock/**}', {
+            release: false
+        })
+    }
+    
+    // vm»·¾³ĞèÒª·¢²¼vmÎÄ¼ş
+    if(currentMedia === 'vm') {
         fiskit
-            .media('vm')
-            .match('*', {
-                domain: cdnUrl
-            })
             .match('*.vm', {
-                parser: fiskit.plugin('velocity', tmpVelocity),
-                rExt: '.vm',
-                deploy: replacer(config.replace).concat(fiskit.plugin('local-deliver', {
-                    to: './output/template/' + config.version
-                }))
-            })
-            .match('*.vm:js', {
-                optimizer: fiskit.plugin('uglify-js', {
-                    mangle: ['require', 'define']
-                })
-            })
-            .match('*.vm:css', {
-                optimizer: fiskit.plugin('clean-css')
-            })
-            .match('/page/(**.vm)', {
-                release: '$1'
+                rExt: '.vm'
             })
             .match('/widget/**.vm', {
                 release: '$0'
-            });
-    })(config);
+            })
+    }
+    
+    fiskit.match('*', {
+        deploy: dealDeploy()
+    })
+}
 
-    // debugã€prodå’Œvmç¯å¢ƒå…±æœ‰
-    (function(config) {
-        ['debug', 'prod'].forEach(function(_media) {
-            fiskit
-                .media(_media)
-                .match('/{page/**.vm,test/**,mock/**}', {
-                    release: false
-                })
-                .match('{server.conf,map.json}', {
-                    release: false
-                })
-                .match('*', {
-                    domain: cdnUrl,
-                    deploy: fiskit.plugin('local-deliver', {
-                        to: 'output/' + _media + '/' + config.version
-                    })
-                })
+function dealDeploy() {
+    /**
+     * ¼ÓÔØfis3-deploy-replace²å¼ş
+     * @param opt {Object|Array}
+     * @example
+     *   { from: 'a', to: 'b' } or [ { from: 'a', to: 'b' }, { from: 'a0', to: 'b0' }]
+     */
+    var replacer = function(opt) {
+        var r = [];
+        if(!opt) {
+            return r;
+        }
+        if(!Array.isArray(opt)) {
+            opt = [opt];
+        }
+        opt.forEach(function(raw) {
+            r.push(fiskit.plugin('replace', raw));
         });
+        return r;
+    };
+    
+    // ¿ª·¢»·¾³£¬·¢²¼Ä¿Â¼¿ÉÅäÖÃ
+    if(currentMedia === 'dev') {
+        if(config.devPath) {
+            return fiskit.plugin('local-deliver', {
+                to: config.devPath  
+            })
+        } else {
+            return false
+        }
+    }
+    // vm»·¾³£¬Ö§³ÖÎÄ¼şÄÚÈİÌæ»»
+    else if (currentMedia === 'vm') {
+        return replacer(config.replace).concat(fiskit.plugin('local-deliver', {
+            to: 'output/template/' + config.version
+        }))
+    }
+    // Ä¬ÈÏ·¢²¼µ½mediaÄ¿Â¼
+    else {
+        return fiskit.plugin('local-deliver', {
+            to: 'output/' + currentMedia + '/' + config.version
+        })
+    }
+}
 
-        // ç”Ÿäº§ç¯å¢ƒå’Œvmç¯å¢ƒéƒ½ä¼šå‹ç¼©jså’Œcss
-        // å‘å¸ƒåç›´æ¥ä¸Šä¼ CDNæœåŠ¡å™¨
-        ['prod', 'vm'].forEach(function(_media) {
-            fiskit
-                .media(_media)
-                .match('*.js', {
-                    optimizer: fiskit.plugin('uglify-js', {
-                        mangle: ['require', 'define']
-                    })
+// ¸÷ÖÖÑ¹ËõºÍ´ò°ü
+function initOptimizer() {
+    if(currentMedia === 'vm' || currentMedia === 'prod') {
+        fiskit
+            .match('*.{js,vm:js,html:js}', {
+                optimizer: fis.plugin('uglify-js', {
+                    mangle: ['require', 'define']
                 })
-                .match('*.{css,scss}', {
-                    optimizer: fiskit.plugin('clean-css')
-                })
-        });
-
-        // ç”Ÿäº§ç¯å¢ƒå¤„ç†pngå›¾ç‰‡å‹ç¼©
-        fiskit.media('prod').match('*.png', {
-            optimizer: fiskit.plugin('png-compressor')
-        });
-    })(config);
-
-    // æ‰“åŒ…é…ç½®ï¼Œé»˜è®¤ä¸ºnullæ— æ‰“åŒ…é…ç½®
-    // media('dev')ç¯å¢ƒåªåœ¨config.packedä¸ºtrueæ—¶æ‰“åŒ…
-    // å…¶å®ƒmediaé»˜è®¤æ‰“åŒ…
+            })
+            .match('*.{scss,css,vm:css,vm:scss,html:css,html:scss}', {
+                optimizer: fis.plugin('clean-css')
+            })
+            .match('*.png', {
+                optimizer: fis.plugin('png-compressor')
+            })
+    }
+        
+    // ´ò°üÅäÖÃ£¬Ä¬ÈÏÎªnullÎŞ´ò°üÅäÖÃ
+    // media('dev')»·¾³Ö»ÔÚconfig.packedÎªtrueÊ±´ò°ü
+    // ÆäËümediaÄ¬ÈÏ´ò°ü
     // @example
     //   {
     //     '/widget/**.css': {
@@ -214,14 +215,11 @@ fiskit.amount = function(cfg) {
     //     }
     //   }
     config.package && (function(packConfig) {
-        var _media, kv;
-        ['dev', 'vm', 'debug', 'prod'].forEach(function(media) {
-            if(media !== 'dev' || config.packed) {
-                _media = fiskit.media(media);
-                for(kv in packConfig) {
-                    _media.match(kv, packConfig[kv]);
-                }
+        var kv;
+        if(currentMedia !== 'dev' || config.packed) {
+            for(kv in packConfig) {
+                fiskit.match(kv, packConfig[kv]);
             }
-        });
+        }
     })(config.package);
-};
+}
