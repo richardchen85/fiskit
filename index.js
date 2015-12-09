@@ -28,16 +28,16 @@ var config, currentMedia, cdnUrl;
 fiskit.amount = function(cfg, callback) {
     // 读取默认配置文件
     config = require('./lib/config');
-    
+
     // 合并传入配置
     fiskit.util.merge(config, cfg);
-    
+
     setDefault();
-    
+
     initGlobal();
-    
+
     initOptimizer();
-    
+
     callback && callback();
 };
 
@@ -58,7 +58,7 @@ function setDefault() {
             isMod: true
         });
     }
-    
+
     // vm环境下不开启vm的parser
     if(currentMedia === 'vm') {
         config.velocity.parse = false;
@@ -119,14 +119,14 @@ function initGlobal() {
         .match('/page/(**.vm)', {
             release: '$1'
         })
-        
+
     // 静态资源不需要vm和test数据
     if(currentMedia === 'debug' || currentMedia === 'prod') {
         fiskit.match('/{page/**.vm,test/**,mock/**}', {
             release: false
         })
     }
-    
+
     // vm环境需要发布vm文件
     if(currentMedia === 'vm') {
         fiskit
@@ -137,10 +137,8 @@ function initGlobal() {
                 release: '$0'
             })
     }
-    
-    fiskit.match('*', {
-        deploy: dealDeploy()
-    })
+
+    dealDeploy();
 }
 
 function dealDeploy() {
@@ -163,27 +161,29 @@ function dealDeploy() {
         });
         return r;
     };
-    
+
     // 开发环境，发布目录可配置
     if(currentMedia === 'dev') {
-        if(config.devPath) {
-            return fiskit.plugin('local-deliver', {
-                to: config.devPath  
+        config.devPath && fiskit.match('*', {
+            deploy: fiskit.plugin('local-deliver', {
+                to: config.devPath
             })
-        } else {
-            return false
-        }
+        });
     }
     // vm环境，支持文件内容替换
     else if (currentMedia === 'vm') {
-        return replacer(config.replace).concat(fiskit.plugin('local-deliver', {
-            to: 'output/template/' + config.version
-        }))
+        fiskit.match('*.vm', {
+            deploy: replacer(config.replace).concat(fiskit.plugin('local-deliver', {
+                to: 'output/template/' + config.version
+            }))
+        })
     }
     // 默认发布到media目录
     else {
-        return fiskit.plugin('local-deliver', {
-            to: 'output/' + currentMedia + '/' + config.version
+        fiskit.match('*', {
+            deploy: fiskit.plugin('local-deliver', {
+                to: 'output/' + currentMedia + '/' + config.version
+            })
         })
     }
 }
@@ -204,7 +204,7 @@ function initOptimizer() {
                 optimizer: fis.plugin('png-compressor')
             })
     }
-        
+
     // 打包配置，默认为null无打包配置
     // media('dev')环境只在config.packed为true时打包
     // 其它media默认打包
