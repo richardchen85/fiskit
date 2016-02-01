@@ -1,19 +1,24 @@
 # fiskit
 A front-end toolkit based on fis （基于fis的纯前端脚手架工具）
-```
-npm install -g fiskit
-```
-<pre>
-fk release [dev|vm|debug|prod]
-  dev: 开发时使用
-  vm: 只输出vm模板文件
-  debug: 用于调试时使用，线上环境的未压缩版代码，方便查找bug
-  prod: 发布时使用，为debug的压缩版本
 
-[arguments]
-  --domain -D 开启CDN前缀
-  --pack -p 开启打包功能
-</pre>
+确认已正确安装`nodejs`，然后执行`npm install -g fiskit`安装本模块。然后在项目根目录执行：
+
+```
+// 启动内置server作为开发时的预览服务器
+fk server start
+
+// 将项目发布到内置server根目录
+fk release
+  [arguments]
+    --domain -D 开启CDN前缀
+    --pack -p 开启打包功能
+
+// 其它命令
+fk release [vm|debug|prod]
+  vm: 输出vm模板文件，默认位置：./output/template/[version]
+  debug: 输出未压缩的静态资源，用于调试时方便查找bug，默认位置：./output/debug/[version]
+  prod: 输出压缩后的静态资源，用于发布到线上，默认位置：./output/prod/[version]
+```
 
 ## 文档
 快速入门、配置、插件开发以及原理等文档 [FIS官方文档](http://fis.baidu.com/fis3/docs/beginning/intro.html)
@@ -78,10 +83,17 @@ var config = {
       loader: 'require',
       macro: '/macro.vm'
   },
-  // fiskit release dev目标路径，默认不设置
+  // fk release dev目标路径，默认不设置
   // 如果你用非fis自带server，可以直接将代码输出到你server的根目录
   devPath: '',
-  // fiskit release vm环境下，deploy的replace选项
+  // 自定义部署目录
+  deploy: {
+    // fk release vm 的输出目录
+    vmTo: '',
+    // fk release debug|prod 的输出目录
+    staticTo: ''
+  },
+  // fk release vm环境下，deploy的replace选项
   // 默认为false, 可跟[Object|Array]
   // 具体配置请参考https://github.com/fex-team/fis3-deploy-replace
   // e.g.

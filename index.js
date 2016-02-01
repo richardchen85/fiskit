@@ -174,7 +174,7 @@ function dealDeploy() {
     else if (currentMedia === 'vm') {
         fiskit.match('*.vm', {
             deploy: replacer(config.replace).concat(fiskit.plugin('local-deliver', {
-                to: 'output/template/' + config.version
+                to: config.deploy.vmTo ? config.deploy.vmTo : 'output/template/' + config.version
             }))
         })
     }
@@ -182,7 +182,7 @@ function dealDeploy() {
     else {
         fiskit.match('*', {
             deploy: fiskit.plugin('local-deliver', {
-                to: 'output/' + currentMedia + '/' + config.version
+                to: config.deploy.staticTo ? config.deploy.staticTo : 'output/' + currentMedia + '/' + config.version
             })
         })
     }
