@@ -1,6 +1,10 @@
 # fiskit
 A front-end toolkit based on fis （基于fis的纯前端脚手架工具）
 
+## changelog
+v0.0.25: 
+> 支持node v4.0
+
 确认已正确安装`nodejs`，然后执行`npm install -g fiskit`安装本模块。然后在项目根目录执行：
 
 ```
