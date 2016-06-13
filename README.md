@@ -1,10 +1,6 @@
 # fiskit
 A front-end toolkit based on fis （基于fis的纯前端脚手架工具）
 
-## changelog
-v0.0.25: 
-> 支持node v4.0
-
 确认已正确安装`nodejs`，然后执行`npm install -g fiskit`安装本模块。然后在项目根目录执行：
 
 ```
@@ -129,3 +125,12 @@ var config = {
 fiskit.amount(config);
 ```
 这里有完整的[fiskit-demo](https://github.com/richard-chen-1985/fiskit-demo)供参考。
+
+## changeLog
+
+##### v0.0.26:
+* 更新fis3及相关插件
+* 使用fis3-server-node2来支持本地 url combo 请求
+
+##### v0.0.25: 
+* 支持node v4.0

@@ -23,8 +23,9 @@ cli.launch({
     } else {
         fiskit = require(env.modulePath);
     }
-    fiskit.set('system.localNPMFolder', path.join(env.cwd, 'node_modules/fiskit'));
-    fiskit.set('system.globalNPMFolder', path.dirname(__dirname));
+    
+    // 默认使用fis3-server-node2作为内置server
+    fiskit.set('server.type', 'node2');
 
     // 截获release后续参数
     argv._[0] === 'release' && setReleaseArg(argv);
