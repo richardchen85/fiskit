@@ -128,6 +128,10 @@ fiskit.amount(config);
 
 ## changeLog
 
+##### v0.0.27
+* 更新fis-parser-velocity到v0.3.2
+* 使用部分es6代码
+
 ##### v0.0.26:
 * 更新fis3及相关插件
 * 使用fis3-server-node2来支持本地 url combo 请求

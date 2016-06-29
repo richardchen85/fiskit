@@ -1,9 +1,10 @@
 #!/usr/bin/env node
+'use strict';
 
-var Liftoff = require('liftoff');
-var argv = require('minimist')(process.argv.slice(2));
-var path = require('path');
-var cli = new Liftoff({
+const Liftoff = require('liftoff');
+const argv = require('minimist')(process.argv.slice(2));
+const path = require('path');
+const cli = new Liftoff({
     name: 'fk',
     processTitle: 'fiskit',
     moduleName: 'fiskit',
@@ -16,8 +17,8 @@ var cli = new Liftoff({
 cli.launch({
     cwd: argv.r || argv.root,
     configPath: argv.f || argv.file
-}, function (env) {
-    var fiskit;
+}, env => {
+    let fiskit;
     if (!env.modulePath) {
         fiskit = require('../');
     } else {

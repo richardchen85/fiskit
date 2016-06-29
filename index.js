@@ -1,5 +1,7 @@
-// À©Õ¹fisµÄÒ»Ð©»ù´¡ÊÂÇé
-var fiskit = module.exports = require('fis3');
+'use strict';
+
+// æ‰©å±•fisçš„ä¸€äº›åŸºç¡€äº‹æƒ…
+let fiskit = module.exports = require('fis3');
 fiskit.require.prefixes.unshift('fk');
 fiskit.configName = 'fk-conf';
 fiskit.cli.name = 'fk';
@@ -14,7 +16,7 @@ Object.defineProperty(global, 'fiskit', {
     value: fiskit
 });
 
-// Ìí¼ÓÈ«¾ÖºöÂÔ
+// æ·»åŠ å…¨å±€å¿½ç•¥
 fiskit.set('project.ignore', fiskit.get('project.ignore').concat([
     '{README,readme}.md',
     'fk-conf.js',
@@ -22,14 +24,14 @@ fiskit.set('project.ignore', fiskit.get('project.ignore').concat([
     '_docs/**'
 ]));
 
-var config, currentMedia, cdnUrl;
+let config, currentMedia, cdnUrl;
 
-// ¿É×Ô¶¨ÒåfisÅäÖÃ
+// å¯è‡ªå®šä¹‰fisé…ç½®
 fiskit.amount = function(cfg, callback) {
-    // ¶ÁÈ¡Ä¬ÈÏÅäÖÃÎÄ¼þ
+    // è¯»å–é»˜è®¤é…ç½®æ–‡ä»¶
     config = require('./lib/config');
 
-    // ºÏ²¢´«ÈëÅäÖÃ
+    // åˆå¹¶ä¼ å…¥é…ç½®
     fiskit.util.merge(config, cfg);
 
     setDefault();
@@ -41,30 +43,30 @@ fiskit.amount = function(cfg, callback) {
     callback && callback();
 };
 
-// Ä¬ÈÏÉèÖÃ
+// é»˜è®¤è®¾ç½®
 function setDefault() {
     cdnUrl = config.cdnUrl + (config.version ? '/' + config.version : '');
     currentMedia = fiskit.project.currentMedia();
 
-    // ¶ÁÈ¡release¶îÍâ²ÎÊý
+    // è¯»å–releaseé¢å¤–å‚æ•°
     config.cdn = fiskit.get('--domain') ? true : config.cdn;
     config.packed = fiskit.get('--pack') ? true : config.packed;
 
-    // ¿ªÆôÄ£¿é»¯²å¼þ
+    // å¼€å¯æ¨¡å—åŒ–æ’ä»¶
     if(config.modules) {
         fiskit.hook(config.modules.mode, config.modules);
-        // widgetºÍcomponentsËùÓÐjsÄ£¿é»¯
+        // widgetå’Œcomponentsæ‰€æœ‰jsæ¨¡å—åŒ–
         fiskit.match('/{widget,static/components}/**.js', {
             isMod: true
         });
     }
 
-    // vm»·¾³ÏÂ²»¿ªÆôvmµÄparser
+    // vmçŽ¯å¢ƒä¸‹ä¸å¼€å¯vmçš„parser
     if(currentMedia === 'vm') {
         config.velocity.parse = false;
     }
 
-    // ¾²Ì¬×ÊÔ´¼ÓÔØ²å¼þ
+    // é™æ€èµ„æºåŠ è½½æ’ä»¶
     fiskit.match('::packager', {
         postpackager: fiskit.plugin('loader', {
             resourceType: config.modules ? config.modules.mode : 'auto',
@@ -74,32 +76,32 @@ function setDefault() {
     });
 }
 
-// È«¾ÖÅäÖÃ
+// å…¨å±€é…ç½®
 function initGlobal() {
     fiskit
-        // ÒÔÏÂ»®Ïß¿ªÍ·µÄ²»·¢²¼
+        // ä»¥ä¸‹åˆ’çº¿å¼€å¤´çš„ä¸å‘å¸ƒ
         .match('**/_*', {
             release: false
         }, true)
-        // ¹Ø±Õmd5
+        // å…³é—­md5
         .match('*', {
             useHash: false,
-            // ¿ª·¢»·¾³£¬cdn¿ÉÅäÖÃ¿ª¹Ø
+            // å¼€å‘çŽ¯å¢ƒï¼Œcdnå¯é…ç½®å¼€å…³
             domain: currentMedia !== 'dev' ? cdnUrl : (config.cdn ? cdnUrl : '')
         })
-        // ¾²Ì¬×ÊÔ´¼Ómd5
+        // é™æ€èµ„æºåŠ md5
         .match('*.{css,scss,js,png,jpg,gif}', {
             useHash: config.useHash
         })
-        // ÅäÖÃÎÄ¼þÊä³ö£¨Ö»ÓÐdev»·¾³ÐèÒª£©
+        // é…ç½®æ–‡ä»¶è¾“å‡ºï¼ˆåªæœ‰devçŽ¯å¢ƒéœ€è¦ï¼‰
         .match('{server.conf,map.json}', {
             release: currentMedia === 'dev' ? '/config/$0' : false
         })
-        // ºöÂÔmockÎÄ¼þ¼°widgetµÄvmÎÄ¼þ
+        // å¿½ç•¥mockæ–‡ä»¶åŠwidgetçš„vmæ–‡ä»¶
         .match('{/widget/**.{mock,json,vm},/page/**.{json,mock},/page/macro.vm}', {
             release: false
         })
-        // ¿ªÆôcss sprite
+        // å¼€å¯css sprite
         .match('*.{css,scss}', {
             sprite: true
         })
@@ -110,7 +112,7 @@ function initGlobal() {
             }),
             rExt: '.css'
         })
-        // Ìí¼ÓvelocityÄ£°åÒýÇæ
+        // æ·»åŠ velocityæ¨¡æ¿å¼•æ“Ž
         .match('*.vm', {
             parser: fiskit.plugin('velocity', config.velocity),
             rExt: '.html',
@@ -120,14 +122,14 @@ function initGlobal() {
             release: '$1'
         })
 
-    // ¾²Ì¬×ÊÔ´²»ÐèÒªvmºÍtestÊý¾Ý
+    // é™æ€èµ„æºä¸éœ€è¦vmå’Œtestæ•°æ®
     if(currentMedia === 'debug' || currentMedia === 'prod') {
         fiskit.match('/{page/**.vm,test/**,mock/**}', {
             release: false
         })
     }
 
-    // vm»·¾³ÐèÒª·¢²¼vmÎÄ¼þ
+    // vmçŽ¯å¢ƒéœ€è¦å‘å¸ƒvmæ–‡ä»¶
     if(currentMedia === 'vm') {
         fiskit
             .match('*.vm', {
@@ -143,7 +145,7 @@ function initGlobal() {
 
 function dealDeploy() {
     /**
-     * ¼ÓÔØfis3-deploy-replace²å¼þ
+     * åŠ è½½fis3-deploy-replaceæ’ä»¶
      * @param opt {Object|Array}
      * @example
      *   { from: 'a', to: 'b' } or [ { from: 'a', to: 'b' }, { from: 'a0', to: 'b0' }]
@@ -156,13 +158,13 @@ function dealDeploy() {
         if(!Array.isArray(opt)) {
             opt = [opt];
         }
-        opt.forEach(function(raw) {
+        opt.forEach(raw => {
             r.push(fiskit.plugin('replace', raw));
         });
         return r;
     };
 
-    // ¿ª·¢»·¾³£¬·¢²¼Ä¿Â¼¿ÉÅäÖÃ
+    // å¼€å‘çŽ¯å¢ƒï¼Œå‘å¸ƒç›®å½•å¯é…ç½®
     if(currentMedia === 'dev') {
         config.devPath && fiskit.match('*', {
             deploy: fiskit.plugin('local-deliver', {
@@ -170,7 +172,7 @@ function dealDeploy() {
             })
         });
     }
-    // vm»·¾³£¬Ö§³ÖÎÄ¼þÄÚÈÝÌæ»»
+    // vmçŽ¯å¢ƒï¼Œæ”¯æŒæ–‡ä»¶å†…å®¹æ›¿æ¢
     else if (currentMedia === 'vm') {
         fiskit.match('*.vm', {
             deploy: replacer(config.replace).concat(fiskit.plugin('local-deliver', {
@@ -178,7 +180,7 @@ function dealDeploy() {
             }))
         })
     }
-    // Ä¬ÈÏ·¢²¼µ½mediaÄ¿Â¼
+    // é»˜è®¤å‘å¸ƒåˆ°mediaç›®å½•
     else {
         fiskit.match('*', {
             deploy: fiskit.plugin('local-deliver', {
@@ -188,7 +190,7 @@ function dealDeploy() {
     }
 }
 
-// ¸÷ÖÖÑ¹ËõºÍ´ò°ü
+// å„ç§åŽ‹ç¼©å’Œæ‰“åŒ…
 function initOptimizer() {
     if(currentMedia === 'vm' || currentMedia === 'prod') {
         fiskit
@@ -205,16 +207,16 @@ function initOptimizer() {
             })
     }
 
-    // ´ò°üÅäÖÃ£¬Ä¬ÈÏÎªnullÎÞ´ò°üÅäÖÃ
-    // media('dev')»·¾³Ö»ÔÚconfig.packedÎªtrueÊ±´ò°ü
-    // ÆäËümediaÄ¬ÈÏ´ò°ü
+    // æ‰“åŒ…é…ç½®ï¼Œé»˜è®¤ä¸ºnullæ— æ‰“åŒ…é…ç½®
+    // media('dev')çŽ¯å¢ƒåªåœ¨config.packedä¸ºtrueæ—¶æ‰“åŒ…
+    // å…¶å®ƒmediaé»˜è®¤æ‰“åŒ…
     // @example
     //   {
     //     '/widget/**.css': {
     //       packTo: '/widget/widget_pkg.css'
     //     }
     //   }
-    config.package && (function(packConfig) {
+    config.package && (packConfig => {
         var kv;
         if(currentMedia !== 'dev' || config.packed) {
             for(kv in packConfig) {
