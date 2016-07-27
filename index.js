@@ -107,7 +107,7 @@ function initGlobal() {
         })
         // sass
         .match('*.scss', {
-            parser: fiskit.plugin('node-sass', {
+            parser: fiskit.plugin('sass-bin', {
                 outputStyle: 'expanded'
             }),
             rExt: '.css'

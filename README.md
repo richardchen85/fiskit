@@ -131,6 +131,8 @@ fiskit.amount(config);
 ##### v0.0.27
 * 更新fis-parser-velocity到v0.3.2
 * 使用部分es6代码
+* 更新fis3及相关插件至v3.4.17
+* 更换sass插件为fis-parser-sass-bin，优化sass安装为直接下载二进制包
 
 ##### v0.0.26:
 * 更新fis3及相关插件
