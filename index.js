@@ -118,13 +118,13 @@ function initGlobal() {
             rExt: '.html',
             loaderLang: 'html'
         })
-        .match('/page/(**.vm)', {
+        .match('/page/(**.*)', {
             release: '$1'
         })
 
     // 静态资源不需要vm和test数据
     if(currentMedia === 'debug' || currentMedia === 'prod') {
-        fiskit.match('/{page/**.vm,test/**,mock/**}', {
+        fiskit.match('/{page/**.vm,page/**.mock,test/**,mock/**}', {
             release: false
         })
     }
