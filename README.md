@@ -1,7 +1,7 @@
 # fiskit
 A front-end toolkit based on fis （基于fis的纯前端脚手架工具）
 
-确认已正确安装`nodejs`，然后执行`npm install -g fiskit`安装本模块。然后在项目根目录执行：
+确认已正确安装`nodejs`，然后执行`npm install -g fiskit`安装本模块（如果node-sass安装有问题，可以尝试 `npm install -g fiskit --sass-binary-site=http://npm.taobao.org/mirrors/node-sass` 使用淘宝镜像）。然后在项目根目录执行：
 
 ```
 // 启动内置server作为开发时的预览服务器
