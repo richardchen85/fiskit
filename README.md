@@ -131,6 +131,7 @@ fiskit.amount(config);
 ##### v0.1.0
 * 更新和整理了一些插件
 * 回到fis-parser-node-sass，因为可以通过淘宝镜像解决安装问题
+* 支持nodejs v6+
 
 ##### v0.0.28
 * 更新fis-parser-sass-bin到v1.0.1
