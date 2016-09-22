@@ -93,14 +93,6 @@ function initGlobal() {
         .match('*.{css,scss,js,png,jpg,gif}', {
             useHash: config.useHash
         })
-        // 配置文件输出（只有dev环境需要）
-        .match('{server.conf,map.json}', {
-            release: currentMedia === 'dev' ? '/config/$0' : false
-        })
-        // 忽略mock文件及widget的vm文件
-        .match('{/widget/**.{mock,json,vm},/page/**.{json,mock},/page/macro.vm}', {
-            release: false
-        })
         // 开启css sprite
         .match('*.{css,scss}', {
             sprite: true
@@ -112,6 +104,10 @@ function initGlobal() {
             }),
             rExt: '.css'
         })
+        // 配置文件输出（只有dev环境需要）
+        .match('{server.conf,map.json}', {
+            release: currentMedia === 'dev' ? '/config/$0' : false
+        })
         // 添加velocity模板引擎
         .match('*.vm', {
             parser: fiskit.plugin('velocity', config.velocity),
@@ -120,6 +116,10 @@ function initGlobal() {
         })
         .match('/page/(**.*)', {
             release: '$1'
+        })
+        // 忽略mock文件及widget的vm文件
+        .match('{/widget/**.{mock,vm},/page/**.mock,/page/macro.vm}', {
+            release: false
         })
 
     // 静态资源不需要vm和test数据
