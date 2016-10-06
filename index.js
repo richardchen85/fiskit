@@ -72,7 +72,9 @@ function setDefault() {
             resourceType: config.modules ? config.modules.mode : 'auto',
             useInlineMap: true
         }),
-        spriter: fiskit.plugin('csssprites')
+        spriter: fiskit.plugin('csssprites', {
+            layout: 'matrix'
+        })
     });
 }
 
@@ -95,7 +97,7 @@ function initGlobal() {
         })
         // 开启css sprite
         .match('*.{css,scss}', {
-            sprite: true
+            useSprite: true
         })
         // sass
         .match('*.scss', {

@@ -128,6 +128,9 @@ fiskit.amount(config);
 
 ## changeLog
 
+##### v0.1.3
+* 修复csssprite
+
 ##### v0.1.2
 * 修复多余文件发布的问题
 * 更新一些插件
