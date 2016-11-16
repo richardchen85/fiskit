@@ -128,6 +128,9 @@ fiskit.amount(config);
 
 ## changeLog
 
+##### v0.1.5
+* 升级fis3
+
 ##### v0.1.4
 * 升级fis3-postpackger-loader
 
