@@ -128,6 +128,12 @@ fiskit.amount(config);
 
 ## changeLog
 
+##### v0.1.6
+* 升级fis-parser-velocity到v0.3.3
+* 升级fis-parser-node-sass到v1.0.1
+* 升级fis3到v3.4.25
+* 升级fis3-hook-commonjs到v0.1.25
+
 ##### v0.1.5
 * 升级fis3
 
