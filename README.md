@@ -128,6 +128,9 @@ fiskit.amount(config);
 
 ## changeLog
 
+##### v0.1.7
+* 将\r\n替换为\n
+
 ##### v0.1.6
 * 升级fis-parser-velocity到v0.3.3
 * 升级fis-parser-node-sass到v1.0.1
