@@ -128,6 +128,10 @@ fiskit.amount(config);
 
 ## changeLog
 
+##### v0.1.8
+* 将静态资源和vm编译时压缩分开，提高了编译速度
+* 升级fis3、fis-parser-velocity、fis3-server-node2
+
 ##### v0.1.7
 * 将\r\n替换为\n
 

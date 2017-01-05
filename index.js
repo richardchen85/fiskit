@@ -38,6 +38,8 @@ fiskit.amount = function(cfg, callback) {
 
     initGlobal();
 
+    dealDeploy();
+
     initOptimizer();
 
     callback && callback();
@@ -141,10 +143,9 @@ function initGlobal() {
                 release: '$0'
             })
     }
-
-    dealDeploy();
 }
 
+// 发布相关
 function dealDeploy() {
     /**
      * 加载fis3-deploy-replace插件
@@ -152,8 +153,8 @@ function dealDeploy() {
      * @example
      *   { from: 'a', to: 'b' } or [ { from: 'a', to: 'b' }, { from: 'a0', to: 'b0' }]
      */
-    var replacer = function(opt) {
-        var r = [];
+    const replacer = function(opt) {
+        let r = [];
         if(!opt) {
             return r;
         }
@@ -194,19 +195,31 @@ function dealDeploy() {
 
 // 各种压缩和打包
 function initOptimizer() {
-    if(currentMedia === 'vm' || currentMedia === 'prod') {
+    const optimizerJs = {
+        optimizer: fis.plugin('uglify-js', {
+            mangle: ['require', 'define']
+        })
+    }
+    const optimizerPng = {
+        optimizer: fis.plugin('png-compressor')
+    }
+    const optimizerCss = {
+        optimizer: fis.plugin('clean-css')
+    }
+
+    if(currentMedia === 'prod') {
         fiskit
-            .match('*.{js,vm:js,html:js}', {
-                optimizer: fis.plugin('uglify-js', {
-                    mangle: ['require', 'define']
-                })
-            })
-            .match('*.{scss,css,vm:css,vm:scss,html:css,html:scss}', {
-                optimizer: fis.plugin('clean-css')
-            })
-            .match('*.png', {
-                optimizer: fis.plugin('png-compressor')
-            })
+            .media('prod')
+            .match('*.js', optimizerJs)
+            .match('*.{scss,css}', optimizerCss)
+            .match('*.png', optimizerPng)
+    }
+
+    if(currentMedia === 'vm') {
+        fiskit
+            .media('vm')
+            .match('*.{vm:js,html:js}', optimizerJs)
+            .match('*.{vm:scss,vm:css,html:scss,html:scss}', optimizerCss)
     }
 
     // 打包配置，默认为null无打包配置
@@ -218,12 +231,9 @@ function initOptimizer() {
     //       packTo: '/widget/widget_pkg.css'
     //     }
     //   }
-    config.package && (packConfig => {
-        var kv;
-        if(currentMedia !== 'dev' || config.packed) {
-            for(kv in packConfig) {
-                fiskit.match(kv, packConfig[kv]);
-            }
+    if(config.package && (currentMedia !== 'dev' || config.packed)) {
+        for(let key in config.package) {
+            fiskit.match(key, config.package[key])
         }
-    })(config.package);
+    }
 }
