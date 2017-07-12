@@ -128,6 +128,10 @@ fiskit.amount(config);
 
 ## changeLog
 
+##### v0.1.9
+ * 重写配置信息的逻辑
+ * 更新插件
+
 ##### v0.1.8
 * 将静态资源和vm编译时压缩分开，提高了编译速度
 * 升级fis3、fis-parser-velocity、fis3-server-node2
