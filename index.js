@@ -22,7 +22,8 @@ fiskit.set('project.ignore', fiskit.get('project.ignore').concat([
     'fk-conf.js',
     '*.iml',
     '_docs/**',
-    'package.json'
+    'package.json',
+    'npm-debug.log'
 ]));
 
 /**
@@ -136,6 +137,17 @@ function configParser(config, currentMedia, cdnUrl) {
             rExt: '.html',
             loaderLang: 'html'
         });
+
+    if (config.postcss) {
+        fiskit
+            .match('*.css', {
+                postprocessor: fiskit.plugin('postcss', config.postcss)
+            })
+            // 非下划线开头的才 autoprefixer
+            .match(/.*\/[a-zA-Z0-9]+\.scss$/, {
+                postprocessor: fiskit.plugin('postcss', config.postcss)
+            });
+    }
 }
 
 /**

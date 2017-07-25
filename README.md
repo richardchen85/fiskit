@@ -128,6 +128,10 @@ fiskit.amount(config);
 
 ## changeLog
 
+##### v0.2.0
+* 增加postcss支持
+* 更新fis3和fis3-server-node2
+
 ##### v0.1.9
  * 重写配置信息的逻辑
  * 更新插件
