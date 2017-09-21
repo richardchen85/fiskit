@@ -24,18 +24,18 @@
   },
   "homepage": "https://github.com/richard-chen-1985/fiskit",
   "dependencies": {
-    "fis-optimizer-png-compressor": "^0.1.6",
-    "fis-parser-node-sass": "^1.0.1",
-    "fis-parser-velocity": "^0.3.4",
-    "fis3": "^3.4.34",
-    "fis3-deploy-replace": "^1.0.2",
-    "fis3-hook-amd": "^0.2.0",
-    "fis3-hook-cmd": "^0.1.2",
-    "fis3-hook-commonjs": "^0.1.26",
-    "fis3-postpackager-loader": "^2.1.4",
-    "fis3-postprocessor-postcss": "^0.2.0",
+    "fis-optimizer-png-compressor": "0.1.6",
+    "fis-parser-node-sass": "1.0.3",
+    "fis-parser-velocity": "0.3.4",
+    "fis3": "3.4.35",
+    "fis3-deploy-replace": "1.0.2",
+    "fis3-hook-amd": "0.2.0",
+    "fis3-hook-cmd": "0.1.2",
+    "fis3-hook-commonjs": "0.1.26",
+    "fis3-postpackager-loader": "2.1.4",
+    "fis3-postprocessor-postcss": "0.2.0",
     "fis3-server-node2": "0.0.4",
-    "liftoff": "^2.3.0",
-    "minimist": "^1.2.0"
+    "liftoff": "2.3.0",
+    "minimist": "1.2.0"
   }
 }
