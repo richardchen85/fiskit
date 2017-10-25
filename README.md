@@ -124,7 +124,7 @@ var config = {
 
 fiskit.amount(config);
 ```
-这里有完整的[fiskit-demo](https://github.com/richard-chen-1985/fiskit-demo)供参考。
+这里有完整的[fiskit-demo](https://github.com/fis-stuff/fiskit-startup)供参考。
 
 ## changeLog
 
