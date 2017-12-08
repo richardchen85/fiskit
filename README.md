@@ -128,6 +128,9 @@ fiskit.amount(config);
 
 ## changeLog
 
+##### v0.2.1
+  * 更新了各种插件，兼容到nodejs v8 (非windows)
+
 ##### v0.2.0
 * 增加postcss支持
 * 更新fis3和fis3-server-node2
