@@ -111,7 +111,8 @@ function configCommon(config, currentMedia, cdnUrl) {
         fiskit.hook(config.modules.mode, config.modules);
         // widget和components所有js模块化
         fiskit.match('/{widget,static/components}/**.js', {
-            isMod: true
+            isMod: true,
+            useSameNameRequire: true
         });
     }
 }

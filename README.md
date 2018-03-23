@@ -128,6 +128,9 @@ fiskit.amount(config);
 
 ## changeLog
 
+##### v0.2.2
+  * 更新了各种插件，回退fis3-hook-amd@0.2.0以修复声明依赖的问题
+
 ##### v0.2.1
   * 更新了各种插件，兼容到nodejs v8 (非windows)
 
