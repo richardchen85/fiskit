@@ -65,8 +65,8 @@ function mergeConfig(cfg, currentMedia) {
     config.cdn = fiskit.get('--domain') ? true : config.cdn;
     config.packed = fiskit.get('--pack') ? true : config.packed;
 
-    // vm环境下不开启vm的parser
-    if(currentMedia === 'vm') {
+    // 发布环境下不开启vm的parser
+    if(currentMedia !== 'dev') {
         config.velocity.parse = false;
     }
 
@@ -176,23 +176,20 @@ function configRelease(config, currentMedia, cdnUrl) {
             release: false
         });
 
-    // 静态资源发布环境
+    // 发布环境
     ['debug', 'prod'].forEach(function (media) {
         fiskit.media(media)
-            // 静态资源不需要vm和test数据
-            .match('/{page/**.vm,page/**.mock,test/**,mock/**}', {
+            // 静态资源不需要test数据
+            .match('/{page/**.mock,test/**,mock/**}', {
                 release: false
+            })
+            .match('*.vm', {
+                rExt: '.vm'
+            })
+            .match('/widget/**.vm', {
+                release: '$0'
             });
     });
-
-    // vm环境
-    fiskit.media('vm')
-        .match('*.vm', {
-            rExt: '.vm'
-        })
-        .match('/widget/**.vm', {
-            release: '$0'
-        });
 }
 
 /**
@@ -211,18 +208,18 @@ function configDeploy(config, currentMedia, cdnUrl) {
 
     // 静态资源默认发布到当前media目录
     ['debug', 'prod'].forEach(function (media) {
-        fiskit.media(media).match('*', {
-            deploy: fiskit.plugin('local-deliver', {
-                to: config.deploy.staticTo ? config.deploy.staticTo : 'output/' + currentMedia + '/' + config.version
+        fiskit
+            .media(media)
+            .match('!*.vm', {
+                deploy: fiskit.plugin('local-deliver', {
+                    to: config.deploy.staticTo ? config.deploy.staticTo : 'output/' + currentMedia + '/' + config.version
+                })
             })
-        });
-    });
-
-    // vm环境，支持文件内容替换
-    fiskit.media('vm').match('*.vm', {
-        deploy: createReplacer(config.replace).concat(fiskit.plugin('local-deliver', {
-            to: config.deploy.vmTo ? config.deploy.vmTo : 'output/template/' + config.version
-        }))
+            .match('*.vm', {
+                deploy: createReplacer(config.replace).concat(fiskit.plugin('local-deliver', {
+                    to: config.deploy.vmTo ? config.deploy.vmTo : 'output/template/' + config.version
+                }))
+            });
     });
 }
 
@@ -233,28 +230,19 @@ function configDeploy(config, currentMedia, cdnUrl) {
  * @param {string} cdnUrl 
  */
 function configOptimizer(config, currentMedia, cdnUrl) {
-    const optimizerJs = {
-        optimizer: fis.plugin('uglify-js', {
-            mangle: ['require', 'define']
-        })
-    }
-    const optimizerPng = {
-        optimizer: fis.plugin('png-compressor')
-    }
-    const optimizerCss = {
-        optimizer: fis.plugin('clean-css')
-    }
-
     fiskit
         .media('prod')
-        .match('*.js', optimizerJs)
-        .match('*.{scss,css}', optimizerCss)
-        .match('*.png', optimizerPng)
-
-    fiskit
-        .media('vm')
-        .match('*.{vm:js,html:js}', optimizerJs)
-        .match('*.{vm:scss,vm:css,html:scss,html:scss}', optimizerCss)
+        .match('*.{js,vm:js,html:js}', {
+            optimizer: fis.plugin('uglify-js', {
+                mangle: ['require', 'define']
+            })
+        })
+        .match('*.{scss,vm:scss,vm:css,html:scss,html:scss}', {
+            optimizer: fis.plugin('clean-css')
+        })
+        .match('*.png', {
+            optimizer: fis.plugin('png-compressor')
+        });
 
     // 打包配置，默认为null无打包配置
     // media('dev')环境只在config.packed为true时打包
@@ -267,7 +255,7 @@ function configOptimizer(config, currentMedia, cdnUrl) {
     //   }
     if(config.package && (currentMedia !== 'dev' || config.packed)) {
         for(let key in config.package) {
-            fiskit.match(key, config.package[key])
+            fiskit.match(key, config.package[key]);
         }
     }
 }

@@ -1,6 +1,6 @@
 {
   "name": "fiskit",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "A front-end toolkit base on fis",
   "main": "index.js",
   "bin": {
@@ -28,10 +28,10 @@
     "fis-parser-velocity": "0.3.4",
     "fis3": "3.4.39",
     "fis3-deploy-replace": "1.0.2",
-    "fis3-hook-amd": "0.2.0",
+    "fis3-hook-amd": "^0.2.2",
     "fis3-hook-cmd": "0.1.2",
-    "fis3-hook-commonjs": "0.1.26",
-    "fis3-postpackager-loader": "2.1.10",
+    "fis3-hook-commonjs": "^0.1.27",
+    "fis3-postpackager-loader": "^2.1.11",
     "fis3-postprocessor-postcss": "0.2.0",
     "fis3-server-node2": "0.0.4",
     "liftoff": "2.5.0",

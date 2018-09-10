@@ -14,10 +14,9 @@ fk release
     --pack -p 开启打包功能
 
 // 其它命令
-fk release [vm|debug|prod]
-  vm: 输出vm模板文件，默认位置：./output/template/[version]
-  debug: 输出未压缩的静态资源，用于调试时方便查找bug，默认位置：./output/debug/[version]
-  prod: 输出压缩后的静态资源，用于发布到线上，默认位置：./output/prod/[version]
+fk release [debug|prod]
+  debug: 输出未压缩的静态资源及vm文件，用于调试时方便查找bug，默认位置：./output/debug/[version]
+  prod: 输出压缩后的静态资源及vm文件，用于发布到线上，默认位置：./output/prod/[version]
 ```
 
 ## 文档
@@ -127,6 +126,10 @@ fiskit.amount(config);
 这里有完整的[fiskit-demo](https://github.com/fis-stuff/fiskit-startup)供参考。
 
 ## changeLog
+
+##### v0.2.3
+ * 更新了依赖插件
+ * 将 vm 环境整合到了 debug 和 prod，解决了 hash 不一致的问题，从此不需要单独发布 vm 文件
 
 ##### v0.2.2
   * 更新了各种插件，回退fis3-hook-amd@0.2.0以修复声明依赖的问题
