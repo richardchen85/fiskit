@@ -127,6 +127,10 @@ fiskit.amount(config);
 
 ## changeLog
 
+##### v0.2.4
+ * fis3 升级到 3.4.41
+ * 其他插件更新请看 package.json
+
 ##### v0.2.3
  * 更新了依赖插件
  * 将 vm 环境整合到了 debug 和 prod，解决了 hash 不一致的问题，从此不需要单独发布 vm 文件
