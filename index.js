@@ -1,5 +1,7 @@
 'use strict';
 
+const nodeVersion = parseInt(process.version.substring(1).split('.')[0], 10);
+
 // 扩展fis的一些基础事情
 let fiskit = module.exports = require('fis3');
 fiskit.require.prefixes.unshift('fk');
@@ -23,7 +25,9 @@ fiskit.set('project.ignore', fiskit.get('project.ignore').concat([
     '*.iml',
     '_docs/**',
     'package.json',
-    'npm-debug.log'
+    'package-lock.json',
+    'npm-debug.log',
+    'yarn.lock'
 ]));
 
 /**
@@ -240,9 +244,16 @@ function configOptimizer(config, currentMedia, cdnUrl) {
         .match('*.{scss,vm:scss,vm:css,html:scss,html:scss}', {
             optimizer: fis.plugin('clean-css')
         })
-        .match('*.png', {
-            optimizer: fis.plugin('png-compressor')
-        });
+
+    if (nodeVersion >= 8) {
+        fiskit.log.warn('node.js v8.0 以上暂不支持 png 图片压缩，已自动关闭压缩功能...')
+    } else {
+        fiskit.media('prod')
+            .match('*.png', {
+                optimizer: nodeVersion <= 8 ? fis.plugin('png-compressor') : null
+            });
+    }
+        
 
     // 打包配置，默认为null无打包配置
     // media('dev')环境只在config.packed为true时打包

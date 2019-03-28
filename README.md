@@ -1,9 +1,10 @@
 # fiskit
+
 A front-end toolkit based on fis （基于fis的纯前端脚手架工具）
 
 确认已正确安装`nodejs`，然后执行`npm install -g fiskit`安装本模块（如果node-sass安装有问题，可以尝试 `npm install -g fiskit --sass-binary-site=http://npm.taobao.org/mirrors/node-sass` 使用淘宝镜像）。然后在项目根目录执行：
 
-```
+```nohighlight
 // 启动内置server作为开发时的预览服务器
 fk server start
 
@@ -20,10 +21,12 @@ fk release [debug|prod]
 ```
 
 ## 文档
+
 快速入门、配置、插件开发以及原理等文档 [FIS官方文档](http://fis.baidu.com/fis3/docs/beginning/intro.html)
 
 ## 目录结构
-<pre>
+
+```nohighlight
 root
   ├ _docs // 项目文档目录
   ├ page // 页面文件
@@ -59,11 +62,13 @@ root
   │  │  └ nav.mock
   ├ fk-conf.js // fiskit配置文件
   ├ server.conf // 本地服务器rewrite规则
-</pre>
-## 配置例子
-*fk-conf.js*
-
 ```
+
+## 配置例子
+
+** fk-conf.js **
+
+```nohighlight
 var config = {
   // 静态资源版本号
   version: '1.0.0',
@@ -123,78 +128,5 @@ var config = {
 
 fiskit.amount(config);
 ```
+
 这里有完整的[fiskit-demo](https://github.com/fis-stuff/fiskit-startup)供参考。
-
-## changeLog
-
-##### v0.2.4
- * fis3 升级到 3.4.41
- * 其他插件更新请看 package.json
-
-##### v0.2.3
- * 更新了依赖插件
- * 将 vm 环境整合到了 debug 和 prod，解决了 hash 不一致的问题，从此不需要单独发布 vm 文件
-
-##### v0.2.2
-  * 更新了各种插件，回退fis3-hook-amd@0.2.0以修复声明依赖的问题
-
-##### v0.2.1
-  * 更新了各种插件，兼容到nodejs v8 (非windows)
-
-##### v0.2.0
-* 增加postcss支持
-* 更新fis3和fis3-server-node2
-
-##### v0.1.9
- * 重写配置信息的逻辑
- * 更新插件
-
-##### v0.1.8
-* 将静态资源和vm编译时压缩分开，提高了编译速度
-* 升级fis3、fis-parser-velocity、fis3-server-node2
-
-##### v0.1.7
-* 将\r\n替换为\n
-
-##### v0.1.6
-* 升级fis-parser-velocity到v0.3.3
-* 升级fis-parser-node-sass到v1.0.1
-* 升级fis3到v3.4.25
-* 升级fis3-hook-commonjs到v0.1.25
-
-##### v0.1.5
-* 升级fis3
-
-##### v0.1.4
-* 升级fis3-postpackger-loader
-
-##### v0.1.3
-* 修复csssprite
-
-##### v0.1.2
-* 修复多余文件发布的问题
-* 更新一些插件
-
-##### v0.1.1
-* 更新一些插件
-
-##### v0.1.0
-* 更新和整理了一些插件
-* 回到fis-parser-node-sass，因为可以通过淘宝镜像解决安装问题
-* 支持nodejs v6+
-
-##### v0.0.28
-* 更新fis-parser-sass-bin到v1.0.1
-
-##### v0.0.27
-* 更新fis-parser-velocity到v0.3.2
-* 使用部分es6代码
-* 更新fis3及相关插件至v3.4.17
-* 更换sass插件为fis-parser-sass-bin，优化sass安装为直接下载二进制包
-
-##### v0.0.26:
-* 更新fis3及相关插件
-* 使用fis3-server-node2来支持本地 url combo 请求
-
-##### v0.0.25:
-* 支持node v4.0
