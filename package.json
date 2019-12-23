@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/richard-chen-1985/fiskit"
+    "url": "https://github.com/richardchen85/fiskit"
   },
   "keywords": [
     "fis",
@@ -20,9 +20,9 @@
   "author": "richard chen",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/richard-chen-1985/fiskit/issues"
+    "url": "https://github.com/richardchen85/fiskit/issues"
   },
-  "homepage": "https://github.com/richard-chen-1985/fiskit",
+  "homepage": "https://github.com/richardchen85/fiskit",
   "dependencies": {
     "fis-parser-node-sass": "1.0.4",
     "fis-parser-velocity": "0.3.5",
