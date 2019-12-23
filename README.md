@@ -82,7 +82,7 @@ var config = {
   // MD5后缀开关
   useHash: false,
   // fis-parser-velocity 配置
-  // 具体参考：https://github.com/richard-chen-1985/fis-parser-velocity
+  // 具体参考：https://github.com/richardchen85/fis-parser-velocity
   velocity: {
       loader: 'require',
       macro: '/macro.vm'
