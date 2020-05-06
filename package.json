@@ -35,6 +35,6 @@
     "fis3-postprocessor-postcss": "0.2.0",
     "fis3-server-node2": "0.0.4",
     "liftoff": "3.0.0",
-    "minimist": "1.2.0"
+    "minimist": "1.2.5"
   }
 }
